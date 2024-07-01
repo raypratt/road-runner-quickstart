@@ -27,19 +27,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
 import android.util.Size;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.*;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
@@ -71,7 +68,7 @@ import java.util.List;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@TeleOp(name = "Concept: AprilTag", group = "Concept")
+@TeleOp(name = "Concept: AprilTag Absolute", group = "Concept")
 
 public class ConceptAprilTag extends LinearOpMode {
 
@@ -100,7 +97,13 @@ public class ConceptAprilTag extends LinearOpMode {
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
-// Save CPU resources; can resume streaming when needed.
+
+                telemetryAprilTag();
+
+                // Push telemetry to the Driver Station.
+                telemetry.update();
+
+                // Save CPU resources; can resume streaming when needed.
                 if (gamepad1.dpad_down) {
                     visionPortal.stopStreaming();
                 } else if (gamepad1.dpad_up) {
@@ -115,14 +118,50 @@ public class ConceptAprilTag extends LinearOpMode {
                     double poseY = detection.rawPose.y;
                     double poseZ = detection.rawPose.z;
                     telemetry.addData("Relative Position", String.format("X:%f, Y:%f, Z:%f",poseX, poseY, poseZ));
+                    // Get the tag absolute position on the field
+                    Transform3d tagPose = new Transform3d(
+                            detection.metadata.fieldPosition,
+                            detection.metadata.fieldOrientation
+                    );
+
+                    // Get the relative location of the tag from the camera
+                    Transform3d cameraToTagTransform = new Transform3d(
+                            new VectorF(
+                                    (float) detection.rawPose.x,
+                                    (float) detection.rawPose.y,
+                                    (float) detection.rawPose.z
+                            ),
+                            Transform3d.MatrixToQuaternion(detection.rawPose.R)
+                    );
+
+                    // Inverse the previous transform to get the location of the camera from the tag
+                    Transform3d tagToCameraTransform = cameraToTagTransform.unaryMinusInverse();
+
+                    // Add the tag position and the relative position of the camera to the tag
+                    Transform3d cameraPose = tagPose.plus(tagToCameraTransform);
+
+                    // The the relative location of the camera to the robot
+                    //TODO: You have to tune this value for your camera
+                    Transform3d robotToCameraTransform = new Transform3d(
+                            new VectorF(
+                                    0,
+                                    0,
+                                    8.50f
+                            ),
+                            new Quaternion(0,0,0,0, System.nanoTime())
+                    );
+
+                    // Inverse the previous transform again to get the location of the robot from the camera
+                    Transform3d cameraToRobotTransform = robotToCameraTransform.unaryMinusInverse();
+
+                    // Add the relative location of the robot to location of the Camera
+                    Transform3d robotPose = cameraPose.plus(cameraToRobotTransform);
+
+                    // Convert from a 3D transform to a 2D pose
+                    Pose2d robotPose2d = robotPose.toPose2d();
+                    telemetry.addData("Robot Absolute",robotPose2d.toString());
 
                 }
-                telemetryAprilTag();
-
-                // Push telemetry to the Driver Station.
-                telemetry.update();
-
-
 
                 // Share the CPU.
                 sleep(20);
@@ -153,7 +192,7 @@ public class ConceptAprilTag extends LinearOpMode {
             // == CAMERA CALIBRATION ==
             // If you do not manually specify calibration parameters, the SDK will attempt
             // to load a predefined calibration for your camera.
-            .setLensIntrinsics(578.272, 578.272, 402.145, 221.506)
+            .setLensIntrinsics(1403.2, 1403.2, 651.469, 336.338)
             // ... these parameters are fx, fy, cx, cy.
 
             .build();
@@ -178,13 +217,13 @@ public class ConceptAprilTag extends LinearOpMode {
         }
 
         // Choose a camera resolution. Not all cameras support all resolutions.
-        //builder.setCameraResolution(new Size(640, 480));
+        builder.setCameraResolution(new Size(1280, 720));
 
         // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
-        //builder.enableLiveView(true);
+        builder.enableLiveView(true);
 
         // Set the stream format; MJPEG uses less bandwidth than default YUY2.
-        //builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
+        builder.setStreamFormat(VisionPortal.StreamFormat.MJPEG);
 
         // Choose whether or not LiveView stops if no processors are enabled.
         // If set "true", monitor shows solid orange screen if no processors enabled.
@@ -218,6 +257,7 @@ public class ConceptAprilTag extends LinearOpMode {
                 telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
                 telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
                 telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
+
             } else {
                 telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
                 telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
