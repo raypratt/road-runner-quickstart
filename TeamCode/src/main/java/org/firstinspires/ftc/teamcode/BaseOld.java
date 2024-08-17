@@ -5,7 +5,6 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.android.AndroidSoundPool;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -13,8 +12,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@TeleOp(name = "Base2024")
-public class Base extends OpMode {
+@TeleOp(name = "Base2023")
+public class  BaseOld extends OpMode {
 
     private BNO055IMU imu;
     private DcMotor rightFrontAsDcMotor;
@@ -34,6 +33,14 @@ public class Base extends OpMode {
     BNO055IMU.Parameters imuParameters;
     int powerExponent;
 
+    @Override
+    public void init(){
+
+    }
+    @Override
+    public void loop(){
+
+}
     /**
      * Describe this function...
      */
@@ -67,29 +74,11 @@ public class Base extends OpMode {
         xStick = gamepad1.left_stick_x;
         yStick = -gamepad1.left_stick_y;
         stickAngle = Math.atan2(yStick, xStick) / Math.PI * 180;
-        magnitude = Math.sqrt(Math.pow(gamepad1.left_stick_x, 2) + Math.pow(gamepad1.left_stick_y, 2));
         IMUheading = angles.firstAngle - 90;
         driveAngle = IMUheading - stickAngle;
         if (gamepad1.back) {
             imu.initialize(imuParameters);
         }
-        // Display orientation info.
-        vertical = magnitude * Math.cos(driveAngle / 180 * Math.PI);
-        horizontal = magnitude * Math.sin(driveAngle / 180 * Math.PI);
-        pivot = 1 * gamepad1.right_stick_x;
-        RF = -pivot + (vertical - horizontal);
-        RR = -pivot + vertical + horizontal;
-        LF = pivot + vertical + horizontal;
-        LR = pivot + (vertical - horizontal);
-        if (LF > 1 || RF > 1 || LR > 1 || RR > 1) {
-            max = maxNum(LF, RF, LR, RR);
-        } else {
-            max = 1;
-        }
-        ((DcMotorEx) rightFrontAsDcMotor).setVelocity(gear * Math.pow(RF / max, powerExponent));
-        ((DcMotorEx) rightRearAsDcMotor).setVelocity(gear * Math.pow(RR / max, powerExponent));
-        ((DcMotorEx) leftFrontAsDcMotor).setVelocity(gear * Math.pow(LF / max, powerExponent));
-        ((DcMotorEx) leftRearAsDcMotor).setVelocity(gear * Math.pow(LR / max, powerExponent));
     }
 
     /**
@@ -124,25 +113,17 @@ public class Base extends OpMode {
     /**
      * This function is executed when this Op Mode is selected from the Driver Station.
      */
-    @Override
-    public void runOpMode() {
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        rightFrontAsDcMotor = hardwareMap.get(DcMotor.class, "rightFrontAsDcMotor");
-        rightRearAsDcMotor = hardwareMap.get(DcMotor.class, "rightRearAsDcMotor");
-        leftFrontAsDcMotor = hardwareMap.get(DcMotor.class, "leftFrontAsDcMotor");
-        leftRearAsDcMotor = hardwareMap.get(DcMotor.class, "leftRearAsDcMotor");
-        androidSoundPool = new AndroidSoundPool();
+  /*  @Override
+        init() {
+            imu = hardwareMap.get(BNO055IMU.class, "imu");
+            androidSoundPool = new AndroidSoundPool();
 
-        // Put initialization blocks here.
-        init2();
-        waitForStart();
-        if (opModeIsActive()) {
-            // Put run blocks here.
-            while (opModeIsActive()) {
-                // Put loop blocks here.
-                Controls();
-                Drive();
-                telemetry2();
+            init2();
+        }
+        loop(){
+            Controls();
+            Drive();
+            telemetry2();
             }
         }
 
@@ -152,7 +133,7 @@ public class Base extends OpMode {
     /**
      * Describe this function...
      */
-    private void telemetry2() {
+   /* private void telemetry2() {
         telemetry.addData("Time", Time);
         telemetry.addData("VibrateTime", VTime);
         telemetry.update();
@@ -167,7 +148,7 @@ public class Base extends OpMode {
     /**
      * Describe this function...
      */
-    private int sgn(double Stick) {
+   /* private int sgn(double Stick) {
         int sgn2;
 
         if (Math.abs(Stick) == Stick) {
@@ -181,7 +162,7 @@ public class Base extends OpMode {
     /**
      * Describe this function...
      */
-    private double maxNum(double LF, double RF, double LR, double RR) {
+   /* private double maxNum(double LF, double RF, double LR, double RR) {
         if (Math.abs(LF) > Math.abs(LR)) {
             max = Math.abs(LF);
         } else {
@@ -194,5 +175,5 @@ public class Base extends OpMode {
             max = Math.abs(RR);
         }
         return max;
-    }
+    }*/
 }

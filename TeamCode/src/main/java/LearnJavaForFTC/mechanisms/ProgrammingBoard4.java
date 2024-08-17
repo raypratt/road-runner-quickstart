@@ -9,12 +9,17 @@ public class ProgrammingBoard4 {
     private DcMotor motor;
     private double ticksPerRotation;
 
+    private double gearing;
+    private String motorType;
+
     public void init(HardwareMap hwMap){
         touchSensor = hwMap.get(TouchSensor.class, "touch_sensor");
         motor = hwMap.get(DcMotor.class, "motor");
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        ticksPerRotation = motor.getMotorType().getTicksPerRev();
+        ticksPerRotation = motor.getMotorType().getTicksPerRev()/20;
+        motorType = String.valueOf(motor.getMotorType());
         motor.getMotorType().setGearing(1);
+        gearing = motor.getMotorType().getGearing();
     }
 
     public boolean isTouchSensorPressed(){
@@ -40,6 +45,8 @@ public class ProgrammingBoard4 {
     public double getGearing(){
         return motor.getMotorType().getGearing();
     }
+
+    public String getMotortype() {return String.valueOf(motor.getMotorType());}
 
 }
 
