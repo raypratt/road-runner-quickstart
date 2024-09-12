@@ -1,6 +1,7 @@
 package LearnJavaForFTC.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 
 @Autonomous()
+@Disabled
 public class SimpleAprilTags extends OpMode {
     private AprilTagProcessor aprilTagProcessor;
     private VisionPortal visionPortal;

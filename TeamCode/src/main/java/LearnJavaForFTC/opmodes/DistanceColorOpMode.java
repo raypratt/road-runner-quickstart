@@ -1,5 +1,6 @@
 package LearnJavaForFTC.opmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import LearnJavaForFTC.mechanisms.ProgrammingBoard7;
 
 @TeleOp
+@Disabled
 public class DistanceColorOpMode extends OpMode {
     ProgrammingBoard7 board = new ProgrammingBoard7();
 

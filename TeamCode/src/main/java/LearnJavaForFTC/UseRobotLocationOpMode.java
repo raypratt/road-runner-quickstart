@@ -1,9 +1,11 @@
 package LearnJavaForFTC;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp
+@Disabled
 public class UseRobotLocationOpMode extends  OpMode{
 
     RobotLocation robotLocation = new RobotLocation(0);

@@ -1,11 +1,13 @@
 package LearnJavaForFTC.opmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import LearnJavaForFTC.mechanisms.ProgrammingBoard1;
 
 @TeleOp
+@Disabled
 public class TouchSensorOpMode extends OpMode{
     ProgrammingBoard1 board = new ProgrammingBoard1();
     @Override

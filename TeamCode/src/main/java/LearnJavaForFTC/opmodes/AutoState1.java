@@ -1,12 +1,14 @@
 package LearnJavaForFTC.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import LearnJavaForFTC.mechanisms.ProgrammingBoard8;
 
 @Autonomous
+@Disabled
 public class AutoState1 extends OpMode {
     ProgrammingBoard8 board = new ProgrammingBoard8();
     int state;

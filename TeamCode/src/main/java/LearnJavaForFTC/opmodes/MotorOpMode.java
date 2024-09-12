@@ -1,11 +1,13 @@
 package LearnJavaForFTC.opmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import LearnJavaForFTC.mechanisms.ProgrammingBoard3;
 
 @TeleOp
+@Disabled
 public class MotorOpMode extends OpMode{
     ProgrammingBoard3 board = new ProgrammingBoard3();
     @Override

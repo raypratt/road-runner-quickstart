@@ -1,11 +1,13 @@
 package LearnJavaForFTC.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import LearnJavaForFTC.mechanisms.ProgrammingBoard8;
 
 @Autonomous
+@Disabled
 public class AutoTime extends OpMode {
     enum State {
         START,
@@ -27,7 +29,7 @@ public class AutoTime extends OpMode {
         lastTime = getRuntime();
     }
     @Override
-    void loop() {
+    public  void loop() {
         telemetry.addData("State", state);
         telemetry.addData("Runtime", getRuntime());
         telemetry.addData("Time in State", getRuntime() - lastTime);

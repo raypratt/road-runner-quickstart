@@ -1,5 +1,6 @@
 package LearnJavaForFTC.opmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import LearnJavaForFTC.mechanisms.ProgrammingBoard8;
 
 @TeleOp
+@Disabled
 public class GyroOpMode extends OpMode {
     ProgrammingBoard8 board = new ProgrammingBoard8();
 

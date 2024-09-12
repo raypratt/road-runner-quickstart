@@ -1,16 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.hardware.digitalchickenlabs.OctoQuad;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
+import org.firstinspires.ftc.robotcore.external.android.AndroidSoundPool;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class Mechanisms {
     private DcMotor rightFront, leftFront, rightBack, leftBack;
+    private AndroidSoundPool androidSoundPool;
     IMU imu;
     public double gear = 0.6666;
     public double powerExponent = 1;
@@ -27,6 +30,10 @@ public class Mechanisms {
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
+
+        //Sound inits
+        androidSoundPool.setVolume(1);
+        androidSoundPool.initialize(SoundPlayer.getInstance());
 
         //IMU inits
         imu = hwMap.get(IMU.class, "imu");

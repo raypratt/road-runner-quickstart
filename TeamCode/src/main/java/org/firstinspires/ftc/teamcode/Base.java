@@ -28,10 +28,7 @@ public class Base extends OpMode {
         }
 
         mechs.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
-//        mechs.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
         telemetry.addData("Gear", mechs.getGear());
         telemetry.addData("RFSpeed", mechs.getRFSpeed());
-        //telemetry.addData("LeftY", gamepad1.left_stick_y);
-        //telemetry.addData("RightX", gamepad1.right_stick_x);
     }
 }

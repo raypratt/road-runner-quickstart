@@ -1,5 +1,6 @@
 package LearnJavaForFTC.opmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import LearnJavaForFTC.mechanisms.ProgrammingBoard8;
 
 @TeleOp
+@Disabled
 public class ToggleOpMode extends OpMode {
     ProgrammingBoard8 board = new ProgrammingBoard8();
     boolean aAlreadyPressed;
