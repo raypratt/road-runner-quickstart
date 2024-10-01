@@ -2,10 +2,12 @@ package Emma;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "hello_world", group = "Emma")
+@Disabled
 public class hello_world extends OpMode {
     public int number = 2;
     public char letter = 'b';

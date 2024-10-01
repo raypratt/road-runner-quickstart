@@ -2,10 +2,12 @@ package TylerN;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "HelloWorld", group = "TylerCode")
+@Disabled
 public class Hello_World extends OpMode {
     @Override
     public void init() {
