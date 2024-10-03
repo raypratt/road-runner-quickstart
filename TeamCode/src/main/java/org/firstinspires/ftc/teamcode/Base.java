@@ -23,11 +23,11 @@ public class Base extends OpMode {
 
     }
 
-    @Override
-    public void start(){
-        elapsedTime.reset();
-        vibrateTime.reset();
-    }
+    //@Override
+    //public void start(){
+    //    elapsedTime.reset();
+    //    vibrateTime.reset();
+    //}
     @Override
     public void loop(){
         if (gamepad1.a) {
@@ -39,9 +39,11 @@ public class Base extends OpMode {
         else if (gamepad1.y) {
             mechs.setGear(1.0);
         }
-        if (gamepad1.options){
+        if (gamepad1.start){
             mechs.resetYaw();
         }
+
+
 
         mechs.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
         //mechs.lights(gamepad1, gamepad2, elapsedTime, wTime, vibrateTime);
@@ -51,6 +53,12 @@ public class Base extends OpMode {
         telemetry.addData("LF Speed", mechs.getLFSpeed());
         telemetry.addData("RB Speed", mechs.getRBSpeed());
         telemetry.addData("LB Speed", mechs.getLBSpeed());
+        telemetry.addData("leftstick x", gamepad1.left_stick_x);
+        telemetry.addData("leftstick y", gamepad1.left_stick_y);
+        telemetry.addData("rightstickx", gamepad1.right_stick_x);
+        telemetry.addData("botHeading", mechs.getBotHeading());
+
+
     }
 
 }

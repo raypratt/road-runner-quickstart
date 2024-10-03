@@ -2,22 +2,21 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.*;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -28,75 +27,15 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
-@TeleOp (name="VisionPortalStreamingOpMode", group="Alpha")
-@Disabled
-public class VisionPortalStreamingOpMode extends LinearOpMode {
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
-    private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
-    private AprilTagProcessor aprilTag;
-    /**
-     * The variable to store our instance of the vision portal.
-     */
-    private VisionPortal visionPortal;
+@TeleOp(name = "VisionDash", group="Alpha")
+public class VisionDash extends OpMode {
 
-    public static class CameraStreamProcessor implements VisionProcessor, CameraStreamSource {
-        private final AtomicReference<Bitmap> lastFrame =
-                new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
+    //Initialize
+    Mechanisms mechs = new Mechanisms();
 
-        @Override
-        public void init(int width, int height, CameraCalibration calibration) {
-            lastFrame.set(Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565));
-        }
-
-        @Override
-        public Object processFrame(Mat frame, long captureTimeNanos) {
-            Bitmap b = Bitmap.createBitmap(frame.width(), frame.height(), Bitmap.Config.RGB_565);
-            Utils.matToBitmap(frame, b);
-            lastFrame.set(b);
-            return null;
-        }
-
-        @Override
-        public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight,
-                                float scaleBmpPxToCanvasPx, float scaleCanvasDensity,
-                                Object userContext) {
-            // do nothing
-        }
-
-        @Override
-        public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation) {
-            continuation.dispatch(bitmapConsumer -> bitmapConsumer.accept(lastFrame.get()));
-        }
-    }
-
-    @Override
-    public void runOpMode() throws InterruptedException {
-        initAprilTag();
-        final CameraStreamProcessor processor = new CameraStreamProcessor();
-
-        FtcDashboard.getInstance().startCameraStream(visionPortal, 0);
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        waitForStart();
-
-        while (opModeIsActive()) {
-            for (AprilTagDetection detection : aprilTag.getDetections()) {
-
-                Orientation rot  = Orientation.getOrientation(detection.rawPose.R, AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-
-                double poseX = detection.rawPose.x;
-                double poseY = detection.rawPose.y;
-                double poseZ = detection.rawPose.z;
-                telemetry.addData("Relative Position", String.format("X:%f, Y:%f, Z:%f",poseX, poseY, poseZ));
-
-            }
-            telemetryAprilTag();
-            telemetry.update();
-            sleep(100L);
-        }
-    }
-    /**
-     * Initialize the AprilTag processor.
-     */
     private void initAprilTag() {
 
         // Create the AprilTag processor.
@@ -164,10 +103,43 @@ public class VisionPortalStreamingOpMode extends LinearOpMode {
 
     }   // end method initAprilTag()
 
-
+    private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
+    private AprilTagProcessor aprilTag;
     /**
-     * Add telemetry about AprilTag detections.
+     * The variable to store our instance of the vision portal.
      */
+    private VisionPortal visionPortal;
+
+    public static class CameraStreamProcessor implements VisionProcessor, CameraStreamSource {
+        private final AtomicReference<Bitmap> lastFrame =
+                new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
+
+        @Override
+        public void init(int width, int height, CameraCalibration calibration) {
+            lastFrame.set(Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565));
+        }
+
+        @Override
+        public Object processFrame(Mat frame, long captureTimeNanos) {
+            Bitmap b = Bitmap.createBitmap(frame.width(), frame.height(), Bitmap.Config.RGB_565);
+            Utils.matToBitmap(frame, b);
+            lastFrame.set(b);
+            return null;
+        }
+
+        @Override
+        public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight,
+                                float scaleBmpPxToCanvasPx, float scaleCanvasDensity,
+                                Object userContext) {
+            // do nothing
+        }
+
+        @Override
+        public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation) {
+            continuation.dispatch(bitmapConsumer -> bitmapConsumer.accept(lastFrame.get()));
+        }
+    }
+
     private void telemetryAprilTag() {
 
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
@@ -192,5 +164,60 @@ public class VisionPortalStreamingOpMode extends LinearOpMode {
         telemetry.addLine("RBE = Range, Bearing & Elevation");
 
     }   // end method telemetryAprilTag()
+
+
+
+    @Override
+    public void init() {
+        initAprilTag();
+        final VisionPortalStreamingOpMode.CameraStreamProcessor processor = new VisionPortalStreamingOpMode.CameraStreamProcessor();
+
+        FtcDashboard.getInstance().startCameraStream(visionPortal, 0);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+    }
+
+    @Override
+    public void loop(){
+        for (AprilTagDetection detection : aprilTag.getDetections()) {
+
+            Orientation rot  = Orientation.getOrientation(detection.rawPose.R, AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+
+            double poseX = detection.rawPose.x;
+            double poseY = detection.rawPose.y;
+            double poseZ = detection.rawPose.z;
+            telemetry.addData("Relative Position", String.format("X:%f, Y:%f, Z:%f",poseX, poseY, poseZ));
+
+        }
+        telemetryAprilTag();
+        telemetry.update();
+
+        if (gamepad1.a) {
+            mechs.setGear(0.33);
+        }
+        else if (gamepad1.x) {
+            mechs.setGear(0.66);
+        }
+        else if (gamepad1.y) {
+            mechs.setGear(1.0);
+        }
+        if (gamepad1.start){
+            mechs.resetYaw();
+        }
+
+
+
+        mechs.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        //mechs.lights(gamepad1, gamepad2, elapsedTime, wTime, vibrateTime);
+
+        telemetry.addData("Gear", mechs.getGear());
+        telemetry.addData("RF Speed", mechs.getRFSpeed());
+        telemetry.addData("LF Speed", mechs.getLFSpeed());
+        telemetry.addData("RB Speed", mechs.getRBSpeed());
+        telemetry.addData("LB Speed", mechs.getLBSpeed());
+        telemetry.addData("leftstick x", gamepad1.left_stick_x);
+        telemetry.addData("leftstick y", gamepad1.left_stick_y);
+        telemetry.addData("rightstickx", gamepad1.right_stick_x);
+        telemetry.addData("botHeading", mechs.getBotHeading());
+    }
 
 }

@@ -37,7 +37,7 @@ public class Mechanisms {
 
         //IMU inits
         imu = hwMap.get(IMU.class, "imu");
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.DOWN, RevHubOrientationOnRobot.UsbFacingDirection.LEFT));
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.DOWN, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         imu.initialize(parameters);
 
         //LED init
@@ -52,7 +52,7 @@ public class Mechanisms {
         double y = -leftStickY;
         double x = leftStickX;
         double rx = pivot;
-
+        imu.resetYaw();
         double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
         double rotX = x*Math.cos(-botHeading) - y*Math.sin(-botHeading);
@@ -94,6 +94,10 @@ public class Mechanisms {
 
     public void resetYaw(){
         imu.resetYaw();
+    }
+
+    public double getBotHeading(){
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
     }
     /*
     public void lights(Gamepad gamepad1, Gamepad gamepad2, ElapsedTime eTime, int wTime, ElapsedTime vTime) {
