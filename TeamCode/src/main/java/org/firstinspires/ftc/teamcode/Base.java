@@ -18,6 +18,11 @@ public class Base extends OpMode {
 
     @Override
      public void init(){
+        elapsedTime = new ElapsedTime();
+        vibrateTime = new ElapsedTime();
+
+        elapsedTime.startTime();
+        vibrateTime.startTime();
 
         mechs.init(hardwareMap);
 

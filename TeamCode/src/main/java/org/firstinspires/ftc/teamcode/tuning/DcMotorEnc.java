@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.tuning;
 import com.qualcomm.hardware.digitalchickenlabs.OctoQuad;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
@@ -13,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 public class DcMotorEnc implements DcMotorEx {
     private OctoQuad octoquad;
     private int encIndex;
-
+    DcMotorController controller;
     private Direction dir;
 
     public DcMotorEnc(OctoQuad octquad, int encIndex) {

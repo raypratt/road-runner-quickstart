@@ -28,10 +28,10 @@ public class Mechanisms {
         leftFront = hwMap.get(DcMotor.class, "leftFront");
         rightBack = hwMap.get(DcMotor.class, "rightBack");
         leftBack = hwMap.get(DcMotor.class, "leftBack");
-        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
 

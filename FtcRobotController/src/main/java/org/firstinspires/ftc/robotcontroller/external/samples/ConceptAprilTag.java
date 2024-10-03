@@ -72,7 +72,7 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 @TeleOp(name = "Concept: AprilTag", group = "Concept")
-@Disabled
+//@Disabled
 public class ConceptAprilTag extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -109,14 +109,22 @@ public class ConceptAprilTag extends LinearOpMode {
 
                 for (AprilTagDetection detection : aprilTag.getDetections()) {
 
-                    Orientation rot  = Orientation.getOrientation(detection.rawPose.R, AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+                 /*   Orientation rot  = Orientation.getOrientation(detection.rawPose.R, AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
                     double poseX = detection.rawPose.x;
                     double poseY = detection.rawPose.y;
                     double poseZ = detection.rawPose.z;
-                    telemetry.addData("Relative Position", String.format("X:%f, Y:%f, Z:%f",poseX, poseY, poseZ));
+                    telemetry.addData("Relative Position", String.format("X:%f, Y:%f, Z:%f",poseX, poseY, poseZ));*/
 
-                }
+                    if (detection.metadata != null) {
+                        telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+                        telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
+                        telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));
+                        telemetry.addLine(String.format("RBE %6.1f %6.1f %6.1f  (inch, deg, deg)", detection.ftcPose.range, detection.ftcPose.bearing, detection.ftcPose.elevation));
+                    } else {
+                        telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
+                        telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));}
+                }               
                 telemetryAprilTag();
 
                 // Push telemetry to the Driver Station.
