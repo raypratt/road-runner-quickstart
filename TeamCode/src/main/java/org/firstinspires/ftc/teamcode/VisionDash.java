@@ -171,7 +171,7 @@ public class VisionDash extends OpMode {
     public void init() {
         initAprilTag();
         final VisionPortalStreamingOpMode.CameraStreamProcessor processor = new VisionPortalStreamingOpMode.CameraStreamProcessor();
-
+        mechs.init(hardwareMap);
         FtcDashboard.getInstance().startCameraStream(visionPortal, 0);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
