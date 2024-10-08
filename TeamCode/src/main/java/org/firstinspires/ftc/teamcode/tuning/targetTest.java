@@ -20,17 +20,14 @@ public final class targetTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
 
-        Pose2d beginPose = new Pose2d(-60, 60, 0);
+        Pose2d beginPose = new Pose2d(36, 62, Math.toRadians(-90));
         if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
             MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
             waitForStart();
             Actions.runBlocking(
                     drive.actionBuilder(beginPose)
-                            .splineToLinearHeading(new Pose2d(33, 60, 0.0), 0.0)
-                            .splineToLinearHeading(new Pose2d(-46, -35, -2.35), -2.35)
-                            .splineToLinearHeading(new Pose2d(45, -55, 0.0), 0.0)
-                            .splineToLinearHeading(new Pose2d(0, 0, 0.0), -2.35)
+                            .lineToY(0)
                             .build());
         } else {
             throw new RuntimeException();
