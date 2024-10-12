@@ -59,6 +59,8 @@ public class Mechanisms {
         double rotY = x*Math.sin(-botHeading) + y*Math.cos(-botHeading);
         double max = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1.0);
 
+        rotX = rotX*1.1;
+
         rightFront.setPower(gear*Math.pow(((rotY - rotX - rx) / max), powerExponent));
         rightBack.setPower(gear*Math.pow(((rotY + rotX - rx) / max), powerExponent));
         leftFront.setPower(gear*Math.pow(((rotY + rotX + rx) / max), powerExponent));

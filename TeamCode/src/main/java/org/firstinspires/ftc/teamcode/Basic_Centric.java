@@ -115,10 +115,10 @@ public class Basic_Centric extends LinearOpMode {
                 vertical = magnitude * Math.cos(driveAngle / 180 * Math.PI);
                 horizontal = magnitude * Math.sin(driveAngle / 180 * Math.PI);
                 pivot = gamepad1.right_stick_x;
-                RF = reverse * (-pivot + (vertical - horizontal));
-                RR = reverse * (-pivot + reverse * (vertical + horizontal));
-                LF = reverse * (pivot + reverse * (vertical + horizontal));
-                LR = reverse * (pivot + reverse * (vertical - horizontal));
+                RF = (-pivot + (vertical - horizontal));
+                RR = (-pivot + (vertical + horizontal));
+                LF = (pivot +  (vertical + horizontal));
+                LR = (pivot +  (vertical - horizontal));
                 max = maxNum(LF, RF, LR, RR);
                 rightFront.setPower(Gear * (RF / max));
                 rightBack.setPower(Gear * (RR / max));
