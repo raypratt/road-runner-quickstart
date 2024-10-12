@@ -10,6 +10,7 @@ public class Auton extends OpMode{
     Mechanisms mechs = new Mechanisms();
     String color;
 
+
     @Override
     public void init(){
         mechs.init(hardwareMap);
