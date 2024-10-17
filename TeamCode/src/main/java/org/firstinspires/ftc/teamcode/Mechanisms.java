@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.android.AndroidSoundPool;
 
@@ -21,6 +23,8 @@ public class Mechanisms {
     public double powerExponent = 1;
     RevBlinkinLedDriver led;
     AndroidSoundPool androidSoundPool;
+    private CRServo left_servo,right_servo;
+    private Servo wrist_servo;
 
     public void init(HardwareMap hwMap) {
         //Motor inits
@@ -34,6 +38,9 @@ public class Mechanisms {
 //        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
+        left_servo = hwMap.get (CRServo.class,"left_servo");
+        right_servo = hwMap.get (CRServo.class,"right_servo");
+        wrist_servo = hwMap.get(Servo.class,"wrist_servo");
 
         //IMU inits
         imu = hwMap.get(IMU.class, "imu");
@@ -100,6 +107,33 @@ public class Mechanisms {
 
     public double getBotHeading(){
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+    }
+
+    public void intake_on(){
+        left_servo.setPower(-1);
+        right_servo.setPower(1);
+    }
+
+    public void intake_off(){
+        left_servo.setPower(0);
+        right_servo.setPower(0);
+    }
+
+    public void intake_out(){
+        left_servo.setPower(1);
+        right_servo.setPower(-1);
+    }
+
+    public void wrist_intake(){
+        wrist_servo.setPosition(0);
+    }
+
+    public void wrist_stow(){
+        wrist_servo.setPosition(0.5);
+    }
+
+    public void wrist_score() {
+        wrist_servo.setPosition(1);
     }
     /*
     public void lights(Gamepad gamepad1, Gamepad gamepad2, ElapsedTime eTime, int wTime, ElapsedTime vTime) {

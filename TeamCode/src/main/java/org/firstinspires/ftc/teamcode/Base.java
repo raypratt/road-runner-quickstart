@@ -5,6 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
+
+import java.util.Optional;
+
 
 @TeleOp(name = "Base", group="Alpha")
 
@@ -47,8 +51,27 @@ public class Base extends OpMode {
         if (gamepad1.start){
             mechs.resetYaw();
         }
-
-
+        if (gamepad1.right_trigger>0){
+            mechs.intake_on();
+        }
+        else if(gamepad1.left_trigger>0){
+            mechs.intake_out();
+        }
+        else{
+            mechs.intake_off();
+        }
+        if (gamepad1.dpad_down){
+            mechs.wrist_intake();
+        }
+        else if (gamepad1.dpad_right){
+            mechs.wrist_stow();
+        }
+        else if (gamepad1.dpad_up){
+            mechs.wrist_score();
+        }
+        if (gamepad1.share) {
+            mechs.resetYaw();
+        }
 
         mechs.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
         //mechs.lights(gamepad1, gamepad2, elapsedTime, wTime, vibrateTime);
