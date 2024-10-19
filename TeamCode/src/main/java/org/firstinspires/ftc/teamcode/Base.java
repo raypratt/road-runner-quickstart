@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -9,13 +12,14 @@ import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCapt
 
 import java.util.Optional;
 
-
+@Config
 @TeleOp(name = "Base", group="Alpha")
 
 public class Base extends OpMode {
     public ElapsedTime elapsedTime;
     public ElapsedTime vibrateTime;
     public int wTime = 115;
+    public int target = 0;
 
     //Initialize
     Mechanisms mechs = new Mechanisms();
@@ -29,6 +33,7 @@ public class Base extends OpMode {
         vibrateTime.startTime();
 
         mechs.init(hardwareMap);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
     }
 
@@ -73,6 +78,18 @@ public class Base extends OpMode {
             mechs.resetYaw();
         }
 
+        if (gamepad2.right_trigger>0){
+            mechs.arm_out();}
+        else if (gamepad2.left_trigger>0){
+            mechs.arm_in();}
+        else{
+            mechs.arm_off();
+        }
+
+        //mechs.arm_move(gamepad2.left_stick_y);
+        target = 93;
+        mechs.set_arm(target);
+
         mechs.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
         //mechs.lights(gamepad1, gamepad2, elapsedTime, wTime, vibrateTime);
 
@@ -85,6 +102,9 @@ public class Base extends OpMode {
         telemetry.addData("leftstick y", gamepad1.left_stick_y);
         telemetry.addData("rightstickx", gamepad1.right_stick_x);
         telemetry.addData("botHeading", mechs.getBotHeading());
+        telemetry.addData("arm angle degrees", mechs.get_arm_pos_degrees());
+        telemetry.addData("arm angle ticks", mechs.get_arm_pos_ticks());
+        telemetry.addData("arm target", target);
 
 
     }

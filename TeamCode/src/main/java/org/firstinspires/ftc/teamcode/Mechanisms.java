@@ -1,23 +1,26 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.android.AndroidSoundPool;
 
 import org.firstinspires.ftc.robotcore.external.android.AndroidSoundPool;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 
-
+@Config
 public class Mechanisms {
-    private DcMotor rightFront, leftFront, rightBack, leftBack;
+    private DcMotor rightFront, leftFront, rightBack, leftBack, telescope, arm;
     IMU imu;
     public double gear = 0.6666;
     public double powerExponent = 1;
@@ -25,6 +28,10 @@ public class Mechanisms {
     AndroidSoundPool androidSoundPool;
     private CRServo left_servo,right_servo;
     private Servo wrist_servo;
+    private PIDController controller;
+
+    public static double p=0.002, i=0, d=0.0001, f=0.05;
+    private final double ticks_in_degrees = 8192/360;
 
     public void init(HardwareMap hwMap) {
         //Motor inits
@@ -32,6 +39,11 @@ public class Mechanisms {
         leftFront = hwMap.get(DcMotor.class, "leftFront");
         rightBack = hwMap.get(DcMotor.class, "rightBack");
         leftBack = hwMap.get(DcMotor.class, "leftBack");
+        telescope = hwMap.get(DcMotor.class, "telescope");
+        arm = hwMap.get(DcMotor.class, "arm");
+        arm.setDirection(DcMotorSimple.Direction.REVERSE);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 //        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -46,6 +58,10 @@ public class Mechanisms {
         imu = hwMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.DOWN, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         imu.initialize(parameters);
+
+        //PIDF intis
+        controller = new PIDController(p, i, d);
+        int arm_start_ticks = arm.getCurrentPosition();
 
         //LED init
         //led = hwMap.get(RevBlinkinLedDriver.class, "led");
@@ -135,6 +151,40 @@ public class Mechanisms {
     public void wrist_score() {
         wrist_servo.setPosition(1);
     }
+
+    public void arm_out(){
+        telescope.setPower(1);
+    }
+
+    public void arm_in(){
+        telescope.setPower(-1);
+    }
+
+    public void arm_off(){
+        telescope.setPower(0);
+    }
+
+    public void arm_move(double power){
+        arm.setPower(power);
+    }
+
+    public void set_arm(int target){
+        controller.setPID(p, i, d);
+        int armPos = arm.getCurrentPosition();
+        double pid = controller.calculate(armPos, target*ticks_in_degrees);
+        double ff = Math.cos(Math.toRadians(target/ticks_in_degrees))*f;
+        double power = pid + ff;
+        arm.setPower(power);
+    }
+
+    public double get_arm_pos_degrees(){
+        return arm.getCurrentPosition()/ticks_in_degrees;
+    }
+
+    public double get_arm_pos_ticks(){
+        return arm.getCurrentPosition();
+    }
+
     /*
     public void lights(Gamepad gamepad1, Gamepad gamepad2, ElapsedTime eTime, int wTime, ElapsedTime vTime) {
         if ((eTime.seconds() - wTime <= wTime) && vTime.seconds() > 2) {
