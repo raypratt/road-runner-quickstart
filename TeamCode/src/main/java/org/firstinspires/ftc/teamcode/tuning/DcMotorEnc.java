@@ -32,6 +32,10 @@ public class DcMotorEnc implements DcMotorEx {
     @Override public void setDirection(Direction direction) { this.dir = direction; }
     @Override public Direction getDirection() { return this.dir; }
 
+    @Override public DcMotorController getController() {
+        return null;
+    }
+
     // Unused Methods Below
     @Override public void setMotorEnable() {}
     @Override public void setMotorDisable() {}
@@ -50,7 +54,6 @@ public class DcMotorEnc implements DcMotorEx {
     @Override public boolean isOverCurrent() { return false; }
     @Override public MotorConfigurationType getMotorType() { return null; }
     @Override public void setMotorType(MotorConfigurationType motorType) {}
-    @Override public DcMotorController getController() { return null; }
     @Override public int getPortNumber() { return 0; }
     @Override public void setZeroPowerBehavior(ZeroPowerBehavior zeroPowerBehavior) {}
     @Override public ZeroPowerBehavior getZeroPowerBehavior() { return null; }

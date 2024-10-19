@@ -59,7 +59,6 @@ public class Mechanisms {
         double y = -leftStickY;
         double x = leftStickX;
         double rx = pivot;
-        imu.resetYaw();
         double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
         double rotX = x*Math.cos(-botHeading) - y*Math.sin(-botHeading);
