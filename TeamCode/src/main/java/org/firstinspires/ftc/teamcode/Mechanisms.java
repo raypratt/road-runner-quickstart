@@ -177,6 +177,15 @@ public class Mechanisms {
         arm.setPower(power);
     }
 
+    public double get_arm_power(int target){
+        controller.setPID(p, i, d);
+        int armPos = arm.getCurrentPosition();
+        double pid = controller.calculate(armPos, target*ticks_in_degrees);
+        double ff = Math.cos(Math.toRadians(target/ticks_in_degrees))*f;
+        double power = pid + ff;
+        return power;
+    }
+
     public double get_arm_pos_degrees(){
         return arm.getCurrentPosition()/ticks_in_degrees;
     }
@@ -184,6 +193,7 @@ public class Mechanisms {
     public double get_arm_pos_ticks(){
         return arm.getCurrentPosition();
     }
+
 
     /*
     public void lights(Gamepad gamepad1, Gamepad gamepad2, ElapsedTime eTime, int wTime, ElapsedTime vTime) {

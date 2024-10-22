@@ -86,8 +86,31 @@ public class Base extends OpMode {
             mechs.arm_off();
         }
 
+        if (gamepad2.x){
+            target = 0;
+            //telescope = 0;
+            mechs.wrist_stow();
+        }
+        else if (gamepad2.b){
+            target = 0;
+            //telescope = 100;
+            mechs.wrist_intake();
+        }
+        else if (gamepad2.a){
+            target = 0;
+            //telescope = 0;
+            mechs.wrist_intake();
+        }
+        else if (gamepad2.y){
+            target = 92;
+            //telescope = 100;
+            mechs.wrist_score();
+        }
+
+
+
         //mechs.arm_move(gamepad2.left_stick_y);
-        target = 93;
+
         mechs.set_arm(target);
 
         mechs.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
