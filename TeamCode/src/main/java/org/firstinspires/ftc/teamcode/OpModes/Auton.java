@@ -37,7 +37,7 @@ public class Auton extends LinearOpMode {
 
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
                 .strafeTo(new Vector2d( 0,-39))
-                .afterDisp(0, new IntakeOn());
+                .afterDisp(0, new IntakeOut());
         TrajectoryActionBuilder tab2 = drive.actionBuilder(initialPose)
                 .lineToY(37)
                 .setTangent(Math.toRadians(0))
