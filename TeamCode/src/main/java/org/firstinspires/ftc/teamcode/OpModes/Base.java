@@ -126,6 +126,7 @@ public class Base extends OpMode {
         telemetry.addData("arm angle degrees", mechs.get_arm_pos_degrees());
         telemetry.addData("arm angle ticks", mechs.get_arm_pos_ticks());
         telemetry.addData("arm target", target);
+        telemetry.addData("Telescope in Ticks:", mechs.getTelescopeTicks());
 
 
     }

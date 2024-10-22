@@ -28,9 +28,10 @@ public class Mechanisms {
     private Servo wrist_servo;
     private PIDController controller;
 
-    public static double p=0.002, i=0, d=0.0001, f=0.05;
+    public static double ARM_P = 0.002, ARM_I =0, ARM_D =0.0001, ARM_F =0.05;
+    public static double TELESCOPE_P = 0.0001, TELESCOPE_I = 0, TELESCOPE_D = 0;
     private final double ticks_in_degrees = 8192/360;
-
+    private final double ticks_to_inches = 0.0;
     public void init(HardwareMap hwMap) {
         //Motor inits
         rightFront = hwMap.get(DcMotor.class, "rightFront");
@@ -58,7 +59,7 @@ public class Mechanisms {
         imu.initialize(parameters);
 
         //PIDF intis
-        controller = new PIDController(p, i, d);
+        controller = new PIDController(ARM_P, ARM_I, ARM_D);
         int arm_start_ticks = arm.getCurrentPosition();
 
         //LED init
@@ -160,25 +161,37 @@ public class Mechanisms {
     public void arm_off(){
         telescope.setPower(0);
     }
+    public void set_telescope(int target){
+        controller.setPID(TELESCOPE_P, TELESCOPE_I, TELESCOPE_D);
+        int telescopePos = telescope.getCurrentPosition();
 
+        double pid = controller.calculate(telescopePos*ticks_to_inches, target);
+        double power = pid;
+        telescope.setPower(power);
+    }
+
+    public int getTelescopeTicks() {
+        return telescope.getCurrentPosition();
+    }
+    
     public void arm_move(double power){
         arm.setPower(power);
     }
 
     public void set_arm(int target){
-        controller.setPID(p, i, d);
+        controller.setPID(ARM_P, ARM_I, ARM_D);
         int armPos = arm.getCurrentPosition();
         double pid = controller.calculate(armPos, target*ticks_in_degrees);
-        double ff = Math.cos(Math.toRadians(target/ticks_in_degrees))*f;
+        double ff = Math.cos(Math.toRadians(target/ticks_in_degrees))* ARM_F;
         double power = pid + ff;
         arm.setPower(power);
     }
 
     public double get_arm_power(int target){
-        controller.setPID(p, i, d);
+        controller.setPID(ARM_P, ARM_I, ARM_D);
         int armPos = arm.getCurrentPosition();
         double pid = controller.calculate(armPos, target*ticks_in_degrees);
-        double ff = Math.cos(Math.toRadians(target/ticks_in_degrees))*f;
+        double ff = Math.cos(Math.toRadians(target/ticks_in_degrees))* ARM_F;
         double power = pid + ff;
         return power;
     }
