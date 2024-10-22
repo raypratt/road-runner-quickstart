@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.tuning;
-
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Rotation2d;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -19,18 +18,20 @@ public final class targetTest extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
 
-
-        Pose2d beginPose = new Pose2d(-38.625, -62.5, Math.toDegrees(90));
+            Pose2d beginPose = new Pose2d(-38.625, -62.5, Math.toRadians(-90));
         if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
             MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
             waitForStart();
             Actions.runBlocking(
                     drive.actionBuilder(beginPose)
-                            .strafeTo(new Vector2d(-45.0, 7.0625))
-                         //   .strafeTo(new Vector2d(-55, 0))
-                          //  .turn(Math.toRadians(90))
-                           // .strafeTo(new Vector2d(-58, -55.5))
+                            .strafeTo(new Vector2d( -49.5,-38))
+                            .turnTo(Math.toRadians(45))
+                            .strafeTo(new Vector2d(-49,-53))
+                            .turnTo(Math.toRadians(-90))
+                            .strafeTo(new Vector2d(-59, -38))
+                            .turnTo(Math.toRadians(45))
+                            .strafeTo(new Vector2d(-49,-53))
                             .build());
         } else {
             throw new RuntimeException();
