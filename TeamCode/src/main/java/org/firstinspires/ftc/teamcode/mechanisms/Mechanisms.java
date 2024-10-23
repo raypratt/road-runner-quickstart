@@ -50,6 +50,7 @@ public class Mechanisms {
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
         telescope.setDirection(DcMotorSimple.Direction.REVERSE);
+        telescope.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         left_servo = hwMap.get (CRServo.class,"left_servo");
         right_servo = hwMap.get (CRServo.class,"right_servo");
         wrist_servo = hwMap.get(Servo.class,"wrist_servo");
@@ -205,7 +206,10 @@ public class Mechanisms {
         return arm.getCurrentPosition();
     }
 
-    public double get_telescope_pos_ticks() {return telescope.getCurrentPosition();}
+    private void set_telescope_ticks(int ticks){
+        telescope.setTargetPosition(ticks);
+        telescope.setPower(1);
+    }
 
 
     /*
