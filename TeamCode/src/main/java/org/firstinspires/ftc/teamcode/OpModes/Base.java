@@ -78,12 +78,18 @@ public class Base extends OpMode {
         }
 
         if (gamepad2.right_trigger>0){
-            mechs.arm_out();}
+            target_telescope = target_telescope + 5;}
         else if (gamepad2.left_trigger>0){
-            mechs.arm_in();}
-        else{
-            mechs.arm_off();
-        }
+           target_telescope = target_telescope - 5;}
+
+        if (gamepad2.left_stick_y<0){
+            target_angle = target_angle + 1;}
+        else if (gamepad2.left_stick_y >0){
+            target_angle = target_angle - 1;}
+
+        if (gamepad2.right_bumper) mechs.intake_out();
+        else if (gamepad2.left_bumper)mechs.intake_on();
+        else mechs.intake_off();
 
         if (gamepad2.x){
             target_angle = 0;
@@ -92,7 +98,7 @@ public class Base extends OpMode {
         }
         else if (gamepad2.b){
             target_angle = 0;
-            target_telescope = 100;
+            target_telescope = 4494;
             mechs.wrist_intake();
         }
         else if (gamepad2.a){
@@ -102,15 +108,33 @@ public class Base extends OpMode {
         }
         else if (gamepad2.y){
             target_angle = 92;
-            target_telescope = 100;
+            target_telescope = 4494;
+            mechs.wrist_score();
+        }
+        else if (gamepad2.dpad_up){
+            target_angle = 70;
+            target_telescope = 1000;
+            mechs.wrist_score();
+        }
+        else if (gamepad2.dpad_down){
+            target_angle = 30;
+            target_telescope = 1000;
+            mechs.wrist_score();
+        }
+        else if (gamepad2.dpad_right){
+            target_angle = 70;
+            target_telescope = 1200;
             mechs.wrist_score();
         }
 
-
-
         //mechs.arm_move(gamepad2.left_stick_y);
-
+        if (target_angle > 92) target_angle = 92;
+        else if (target_angle < 0) target_angle = 0;
         mechs.set_arm(target_angle);
+
+        if (target_telescope > 4494) target_telescope = 4494;
+        else if (target_telescope > 0) target_telescope = 0;
+
         mechs.set_telescope(target_telescope);
 
         mechs.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
