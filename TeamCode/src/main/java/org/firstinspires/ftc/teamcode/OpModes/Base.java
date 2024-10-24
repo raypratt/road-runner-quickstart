@@ -87,22 +87,22 @@ public class Base extends OpMode {
 
         if (gamepad2.x){
             target_angle = 0;
-            //telescope = 0;
+            target_telescope = 0;
             mechs.wrist_stow();
         }
         else if (gamepad2.b){
             target_angle = 0;
-            //telescope = 100;
+            target_telescope = 100;
             mechs.wrist_intake();
         }
         else if (gamepad2.a){
             target_angle = 0;
-            //telescope = 0;
+            target_telescope = 0;
             mechs.wrist_intake();
         }
         else if (gamepad2.y){
             target_angle = 92;
-            //telescope = 100;
+            target_telescope = 100;
             mechs.wrist_score();
         }
 
