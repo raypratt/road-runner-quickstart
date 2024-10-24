@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.InstantFunction;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
@@ -13,7 +13,6 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.mechanisms.Mechanisms;
@@ -35,9 +34,8 @@ public class Auton extends LinearOpMode {
         // vision here that outputs position
         int visionOutputPosition = 1;
 
-        TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-                .strafeTo(new Vector2d( 0,-39))
-                .afterDisp(0, new IntakeOut());
+        TrajectoryActionBuilder driveToBars = drive.actionBuilder(initialPose)
+                .strafeTo(new Vector2d( 0,-39));
         TrajectoryActionBuilder tab2 = drive.actionBuilder(initialPose)
                 .lineToY(37)
                 .setTangent(Math.toRadians(0))
@@ -51,9 +49,6 @@ public class Auton extends LinearOpMode {
                 .waitSeconds(2)
                 .strafeTo(new Vector2d(46, 30))
                 .waitSeconds(3);
-        Action trajectoryActionCloseOut = tab1.fresh()
-                .strafeTo(new Vector2d(48, 12))
-                .build();
 
         while (!isStopRequested() && !opModeIsActive()) {
             telemetry.addLine("Press X for Blue, 0 for Red");
@@ -70,27 +65,34 @@ public class Auton extends LinearOpMode {
             telemetry.update();
         }
 
-        int startPosition = visionOutputPosition;
-        telemetry.addData("Starting Position", startPosition);
-        telemetry.update();
+//        int startPosition = visionOutputPosition;
+//        telemetry.addData("Starting Position", startPosition);
+//        telemetry.update();
         waitForStart();
-
-        if (isStopRequested()) return;
-
-        Action trajectoryActionChosen;
-        if (startPosition == 1) {
-            trajectoryActionChosen = tab1.build();
-        } else if (startPosition == 2) {
-            trajectoryActionChosen = tab2.build();
-        } else {
-            trajectoryActionChosen = tab3.build();
-        }
-
+//
+//        if (isStopRequested()) return;
+//
+//        Action trajectoryActionChosen;
+//        if (startPosition == 1) {
+//            trajectoryActionChosen = tab1.build();
+//        } else if (startPosition == 2) {
+//            trajectoryActionChosen = tab2.build();
+//        } else {
+//            trajectoryActionChosen = tab3.build();
+//        }
+        MoveTelescope telescopeAction = new MoveTelescope(1);
+        MoveArm armAction = new MoveArm(45);
         Actions.runBlocking(
-                drive.actionBuilder(initialPose)
-                        .strafeTo(new Vector2d( 0,-39))
-                        .afterTime(0, new IntakeOut())
-                        .build()
+                new ParallelAction(
+                    telescopeAction,
+                    armAction,
+                    new SequentialAction(
+                            driveToBars.build(),
+                            (Action) new UpdateArm(armAction,70),
+                            (Action) new UpdateTelescope(telescopeAction, 10)
+
+                    )
+                )
         );
     }
 
@@ -103,5 +105,64 @@ public class Auton extends LinearOpMode {
             mechs.intake_out();
         }
     }
-}
 
+    public class MoveArm implements Action {
+        private double angle;
+        public MoveArm(double angle) {
+            this.angle = angle;
+        }
+        public void updateAngle(double angle){
+            this.angle = angle;
+
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            mechs.set_arm(angle);
+            return false;
+        }
+    }
+
+    public class UpdateArm implements InstantFunction{
+        private MoveArm armAction;
+        private double angle;
+        public UpdateArm(MoveArm armAction, double angle) {
+            this.armAction = armAction;
+            this.angle = angle;
+        }
+
+        @Override
+        public void run() {
+            armAction.updateAngle(angle);
+        }
+    }
+
+    public class MoveTelescope implements Action{
+        public double position;
+        public MoveTelescope(double position) {
+            this.position = position;
+
+        }
+        public void updatePos(double position) {
+            this.position = position;
+        }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            mechs.set_telescope(position);
+            return false;
+        }
+    }
+    public class UpdateTelescope implements InstantFunction {
+        private double position;
+        MoveTelescope telescopeAction;
+        public UpdateTelescope(MoveTelescope telescopeAction, double position){
+            this.position = position;
+            this.telescopeAction = telescopeAction;
+        }
+
+        @Override
+        public void run() {
+            telescopeAction.updatePos(position);
+        }
+    }
+
+}

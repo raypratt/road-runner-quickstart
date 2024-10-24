@@ -50,7 +50,6 @@ public class Mechanisms {
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
         telescope.setDirection(DcMotorSimple.Direction.REVERSE);
-        telescope.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         left_servo = hwMap.get (CRServo.class,"left_servo");
         right_servo = hwMap.get (CRServo.class,"right_servo");
         wrist_servo = hwMap.get(Servo.class,"wrist_servo");
@@ -163,7 +162,7 @@ public class Mechanisms {
     public void arm_off(){
         telescope.setPower(0);
     }
-    public void set_telescope(int target){
+    public void set_telescope(double target){
         controller.setPID(TELESCOPE_P, TELESCOPE_I, TELESCOPE_D);
         int telescopePos = telescope.getCurrentPosition();
 
@@ -180,7 +179,7 @@ public class Mechanisms {
         arm.setPower(power);
     }
 
-    public void set_arm(int target){
+    public void set_arm(double target){
         controller.setPID(ARM_P, ARM_I, ARM_D);
         int armPos = arm.getCurrentPosition();
         double pid = controller.calculate(armPos, target*ticks_in_degrees);
@@ -206,8 +205,9 @@ public class Mechanisms {
         return arm.getCurrentPosition();
     }
 
-    private void set_telescope_ticks(int ticks){
+    public void set_telescope_ticks(int ticks){
         telescope.setTargetPosition(ticks);
+        telescope.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         telescope.setPower(1);
     }
 
