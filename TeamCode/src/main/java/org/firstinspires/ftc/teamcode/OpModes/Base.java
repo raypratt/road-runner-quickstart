@@ -17,7 +17,8 @@ public class Base extends OpMode {
     public ElapsedTime elapsedTime;
     public ElapsedTime vibrateTime;
     public int wTime = 115;
-    public int target = 0;
+    public int target_angle = 0;
+    public int target_telescope = 0;
 
     //Initialize
     Mechanisms mechs = new Mechanisms();
@@ -85,22 +86,22 @@ public class Base extends OpMode {
         }
 
         if (gamepad2.x){
-            target = 0;
+            target_angle = 0;
             //telescope = 0;
             mechs.wrist_stow();
         }
         else if (gamepad2.b){
-            target = 0;
+            target_angle = 0;
             //telescope = 100;
             mechs.wrist_intake();
         }
         else if (gamepad2.a){
-            target = 0;
+            target_angle = 0;
             //telescope = 0;
             mechs.wrist_intake();
         }
         else if (gamepad2.y){
-            target = 92;
+            target_angle = 92;
             //telescope = 100;
             mechs.wrist_score();
         }
@@ -109,7 +110,8 @@ public class Base extends OpMode {
 
         //mechs.arm_move(gamepad2.left_stick_y);
 
-        mechs.set_arm(target);
+        mechs.set_arm(target_angle);
+        mechs.set_telescope(target_telescope);
 
         mechs.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
         //mechs.lights(gamepad1, gamepad2, elapsedTime, wTime, vibrateTime);
@@ -125,7 +127,7 @@ public class Base extends OpMode {
         telemetry.addData("botHeading", mechs.getBotHeading());
         telemetry.addData("arm angle degrees", mechs.get_arm_pos_degrees());
         telemetry.addData("arm angle ticks", mechs.get_arm_pos_ticks());
-        telemetry.addData("arm target", target);
+        telemetry.addData("arm target", target_angle);
         telemetry.addData("Telescope in Ticks:", mechs.getTelescopeTicks());
 
 

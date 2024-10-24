@@ -31,7 +31,7 @@ public class Mechanisms {
     public static double ARM_P = 0.002, ARM_I =0, ARM_D =0.0001, ARM_F =0.05;
     public static double TELESCOPE_P = 0.0001, TELESCOPE_I = 0, TELESCOPE_D = 0;
     private final double ticks_in_degrees = 8192/360;
-    private final double ticks_to_inches = 0.0;
+    private final double ticks_to_inches = 1; // set = to 1 if using just ticks.
     public void init(HardwareMap hwMap) {
         //Motor inits
         rightFront = hwMap.get(DcMotor.class, "rightFront");
