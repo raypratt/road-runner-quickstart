@@ -88,9 +88,8 @@ public class Auton extends LinearOpMode {
                     armAction,
                     new SequentialAction(
                             driveToBars.build(),
-                            new UpdateArm(armAction,70),
-                            new UpdateTelescope(telescopeAction, 10)
-
+                            (Action) new UpdateArm(armAction,70),
+                            (Action) new UpdateTelescope(telescopeAction, 10)
 
                     )
                 )
@@ -123,17 +122,17 @@ public class Auton extends LinearOpMode {
         }
     }
 
-    public class UpdateArm implements Action{
+    public class UpdateArm implements InstantFunction{
         private MoveArm armAction;
         private double angle;
         public UpdateArm(MoveArm armAction, double angle) {
             this.armAction = armAction;
             this.angle = angle;
         }
+
         @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+        public void run() {
             armAction.updateAngle(angle);
-            return false;
         }
     }
 
@@ -152,7 +151,7 @@ public class Auton extends LinearOpMode {
             return false;
         }
     }
-    public class UpdateTelescope implements Action{
+    public class UpdateTelescope implements InstantFunction {
         private double position;
         MoveTelescope telescopeAction;
         public UpdateTelescope(MoveTelescope telescopeAction, double position){
@@ -160,11 +159,9 @@ public class Auton extends LinearOpMode {
             this.telescopeAction = telescopeAction;
         }
 
-
         @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+        public void run() {
             telescopeAction.updatePos(position);
-            return true;
         }
     }
 
