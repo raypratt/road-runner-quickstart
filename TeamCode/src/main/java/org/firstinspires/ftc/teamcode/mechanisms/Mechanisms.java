@@ -6,6 +6,7 @@ import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -28,9 +29,13 @@ public class Mechanisms {
     private Servo wrist_servo;
     private PIDController controller;
 
-    public static double ARM_P = 0.002, ARM_I =0, ARM_D =0.0001, ARM_F =0.05;
-    public static double TELESCOPE_P = 0.0001, TELESCOPE_I = 0, TELESCOPE_D = 0;
+
+//    public static double ARM_P = 0.001, ARM_I =0, ARM_D =0.0000, ARM_F =0.05; // Gold Bot
+    public static double ARM_P = 0.003, ARM_I =0, ARM_D =0.0000, ARM_F =0.05;
+//    public static double TELESCOPE_P = 0.03, TELESCOPE_I = 0.01, TELESCOPE_D = 0; // Gold Bot
+    public static double TELESCOPE_P = 0.01, TELESCOPE_I = 0.01, TELESCOPE_D = 0;
     private final double ticks_in_degrees = 8192/360;
+    private static double ARM_OFFSET = 0;
     private final double ticks_to_inches = 1; // set = to 1 if using just ticks.
     public void init(HardwareMap hwMap) {
         //Motor inits
@@ -40,8 +45,10 @@ public class Mechanisms {
         leftBack = hwMap.get(DcMotor.class, "leftBack");
         telescope = hwMap.get(DcMotor.class, "telescope");
         arm = hwMap.get(DcMotor.class, "arm");
+
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        telescope.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 //        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -50,6 +57,7 @@ public class Mechanisms {
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
         telescope.setDirection(DcMotorSimple.Direction.REVERSE);
+
         left_servo = hwMap.get (CRServo.class,"left_servo");
         right_servo = hwMap.get (CRServo.class,"right_servo");
         wrist_servo = hwMap.get(Servo.class,"wrist_servo");
@@ -144,7 +152,7 @@ public class Mechanisms {
     }
 
     public void wrist_stow(){
-        wrist_servo.setPosition(0.5);
+        wrist_servo.setPosition(0.7);
     }
 
     public void wrist_score() {
