@@ -28,6 +28,7 @@ public class Mechanisms {
     private CRServo left_servo,right_servo;
     private Servo wrist_servo;
     private PIDController controller;
+    public double wrist_pos;
 
 
 //    public static double ARM_P = 0.001, ARM_I =0, ARM_D =0.0000, ARM_F =0.05; // Gold Bot
@@ -49,6 +50,7 @@ public class Mechanisms {
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         telescope.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
 //        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -152,11 +154,23 @@ public class Mechanisms {
     }
 
     public void wrist_stow(){
+        wrist_pos= 0.7;
         wrist_servo.setPosition(0.7);
     }
 
     public void wrist_score() {
-        wrist_servo.setPosition(1);
+        wrist_pos = 1.0;
+        wrist_servo.setPosition(1.0);
+    }
+
+    public void wrist(double inc) {
+        wrist_pos += inc;
+        wrist_servo.setPosition(wrist_pos);
+    }
+
+    public void  wrist_chamber() {
+        wrist_pos = 0.9;
+        wrist_servo.setPosition(0.9);
     }
 
     public void arm_out(){

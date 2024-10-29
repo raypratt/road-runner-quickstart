@@ -69,6 +69,7 @@ public class Auton extends LinearOpMode {
             telemetry.addData("Position during Init", position);
             telemetry.update();
             mechs.set_arm(45);
+            mechs.set_telescope(0);
         }
 
 //        int startPosition = visionOutputPosition;
