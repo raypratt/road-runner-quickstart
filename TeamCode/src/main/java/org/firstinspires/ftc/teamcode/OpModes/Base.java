@@ -19,7 +19,7 @@ public class Base extends OpMode {
     public int wTime = 115;
     public static int target_angle = 5;
     public static int target_telescope = 0;
-    public double wrist = 1;
+
     //Initialize
     Mechanisms mechs = new Mechanisms();
 
@@ -76,10 +76,10 @@ public class Base extends OpMode {
 
         //Wrist Position
         if (gamepad2.right_stick_y<0){
-            mechs.wrist(0.1);
+            mechs.wrist(0.05);
         }
         if (gamepad2.right_stick_y>0){
-            mechs.wrist(-0.1);
+            mechs.wrist(-0.05);
         }
 
         //Manual Telescope Control
@@ -167,7 +167,6 @@ public class Base extends OpMode {
         telemetry.addData("arm power", mechs.get_arm_power(target_angle));
         telemetry.addData("Telescope Target", target_telescope);
         telemetry.addData("Telescope in Ticks:", mechs.getTelescopeTicks());
-        telemetry.addData("Wrist", wrist);
 
 
     }

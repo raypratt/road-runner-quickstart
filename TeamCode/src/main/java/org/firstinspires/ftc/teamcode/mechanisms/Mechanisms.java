@@ -60,6 +60,7 @@ public class Mechanisms {
         rightBack.setDirection(DcMotor.Direction.REVERSE);
         telescope.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        //Servo Inits
         left_servo = hwMap.get (CRServo.class,"left_servo");
         right_servo = hwMap.get (CRServo.class,"right_servo");
         wrist_servo = hwMap.get(Servo.class,"wrist_servo");
@@ -80,7 +81,7 @@ public class Mechanisms {
         //androidSoundPool = new AndroidSoundPool();
         //androidSoundPool.setVolume(1);
     }
-
+    //Mecanum Motor Math
     public void drive(double leftStickX, double leftStickY, double pivot){
         double y = -leftStickY;
         double x = leftStickX;
@@ -99,6 +100,7 @@ public class Mechanisms {
         leftBack.setPower(gear*Math.pow(((rotY - rotX + rx) / max), powerExponent));
 
     }
+
     public void setGear(double newGear){
         gear = newGear;
     }
@@ -106,6 +108,7 @@ public class Mechanisms {
     public double getGear() {
         return gear;
     }
+
     public double getPowerExponent(){
         return powerExponent;
     }
