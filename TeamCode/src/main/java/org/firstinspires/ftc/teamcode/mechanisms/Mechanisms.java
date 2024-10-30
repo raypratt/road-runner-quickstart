@@ -193,6 +193,10 @@ public class Mechanisms {
         telescope.setPower(power);
     }
 
+    public void set_telescope_power(double power){
+        telescope.setPower(power);
+    }
+
     public int getTelescopeTicks() {
         return telescope.getCurrentPosition();
     }
