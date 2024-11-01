@@ -38,22 +38,13 @@ public class Auton extends LinearOpMode {
 
         TrajectoryActionBuilder driveToBars = drive.actionBuilder(initialPose)
                 .strafeTo(new Vector2d( 0,-48));
-        TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d( 0,-48, Math.toRadians(90)))
+        TrajectoryActionBuilder firstSample = drive.actionBuilder(new Pose2d( 0,-48, Math.toRadians(90)))
+                .strafeToLinearHeading(new Vector2d(-30,-45.5),Math.toRadians(-45));
+        TrajectoryActionBuilder scoringPosition = drive.actionBuilder(new Pose2d( 0,-48, Math.toRadians(90)))
+                .strafeToLinearHeading(new Vector2d(-53,-51),Math.toRadians(45));
+        TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(-53,-51,Math.toRadians(45)))
                 .strafeTo(new Vector2d( 60,-60));
 
-        TrajectoryActionBuilder tab2 = drive.actionBuilder(initialPose)
-                .lineToY(37)
-                .setTangent(Math.toRadians(0))
-                .lineToX(18)
-                .waitSeconds(3)
-                .setTangent(Math.toRadians(0))
-                .lineToXSplineHeading(46, Math.toRadians(180))
-                .waitSeconds(3);
-        TrajectoryActionBuilder tab3 = drive.actionBuilder(initialPose)
-                .lineToYSplineHeading(33, Math.toRadians(180))
-                .waitSeconds(2)
-                .strafeTo(new Vector2d(46, 30))
-                .waitSeconds(3);
 
         while (!isStopRequested() && !opModeIsActive()) {
             telemetry.addLine("Press X for Blue, 0 for Red");
@@ -95,6 +86,7 @@ public class Auton extends LinearOpMode {
                     telescopeAction,
                     armAction,
                     new SequentialAction(
+                            new WristScore(),
                             driveToBars.build(),
                             new UpdateArm(armAction,45),
                             new SleepAction(1),
@@ -107,13 +99,49 @@ public class Auton extends LinearOpMode {
                             new IntakeOff(),
                             new UpdateTelescope(telescopeAction, 300),
                             new SleepAction(1),
-                            park.build()
-//
+                            firstSample.build(),
+                            new UpdateArm(armAction,0),
+                            new IntakeIn(),
+                            new UpdateTelescope(telescopeAction, 4200),
+                            new SleepAction(1),
+                            new IntakeOff(),
+                            new UpdateTelescope(telescopeAction, 300),
+                            scoringPosition.build(),
+                            new UpdateArm(armAction,77),
+                            new UpdateTelescope(telescopeAction,4200)
+
+
                     )
                 )
         );
     }
+    public class WristBasket implements Action {
+        // checks if the lift motor has been powered on
 
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            mechs.wrist_basket();
+            return false;
+        }
+    }
+    public class WristScore implements Action {
+        // checks if the lift motor has been powered on
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            mechs.wrist_score();
+            return false;
+        }
+    }
+    public class WristIntake implements Action {
+        // checks if the lift motor has been powered on
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            mechs.wrist_intake();
+            return false;
+        }
+    }
     public class IntakeOut implements Action {
         // checks if the lift motor has been powered on
 
@@ -123,6 +151,16 @@ public class Auton extends LinearOpMode {
             return false;
         }
     }
+    public class IntakeIn implements Action {
+        // checks if the lift motor has been powered on
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            mechs.intake_in();
+            return false;
+        }
+    }
+
     public class IntakeOff implements Action {
         // checks if the lift motor has been powered on
 

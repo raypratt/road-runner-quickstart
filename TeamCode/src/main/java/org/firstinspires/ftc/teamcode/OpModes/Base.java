@@ -65,10 +65,10 @@ public class Base extends OpMode {
 
         //Intake On/Off
         if (gamepad2.right_bumper){
-            mechs.intake_on();
+            mechs.intake_out();
         }
         else if(gamepad2.left_bumper){
-            mechs.intake_out();
+            mechs.intake_in();
         }
         else{
             mechs.intake_off();

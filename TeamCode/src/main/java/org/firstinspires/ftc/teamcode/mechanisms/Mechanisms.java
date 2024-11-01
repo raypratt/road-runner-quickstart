@@ -134,9 +134,9 @@ public class Mechanisms {
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
     }
 
-    public void intake_on(){
-        left_servo.setPower(-1);
-        right_servo.setPower(1);
+    public void intake_in(){
+        left_servo.setPower(1);
+        right_servo.setPower(-1);
     }
 
     public void intake_off(){
@@ -145,17 +145,17 @@ public class Mechanisms {
     }
 
     public void intake_out(){
-        left_servo.setPower(1);
-        right_servo.setPower(-1);
+        left_servo.setPower(-1);
+        right_servo.setPower(1);
     }
 
     public void wrist_intake(){
         wrist_servo.setPosition(0);
     }
 
-    public void wrist_stow(){
-        wrist_pos= 0.7;
-        wrist_servo.setPosition(0.7);
+    public void wrist_basket(){
+        wrist_pos= 0.5;
+        wrist_servo.setPosition(0.5);
     }
 
     public void wrist_score() {
