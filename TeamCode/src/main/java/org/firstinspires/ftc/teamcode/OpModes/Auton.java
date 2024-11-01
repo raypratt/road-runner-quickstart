@@ -105,10 +105,13 @@ public class Auton extends LinearOpMode {
                             new UpdateTelescope(telescopeAction, 4200),
                             new SleepAction(1),
                             new IntakeOff(),
+                            new WristBasket(),
                             new UpdateTelescope(telescopeAction, 300),
                             scoringPosition.build(),
                             new UpdateArm(armAction,77),
-                            new UpdateTelescope(telescopeAction,4200)
+                            new SleepAction(1),
+                            new UpdateTelescope(telescopeAction,4200),
+                            new IntakeOut()
 
 
                     )
