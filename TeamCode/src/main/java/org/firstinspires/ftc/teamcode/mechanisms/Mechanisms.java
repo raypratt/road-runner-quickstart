@@ -50,12 +50,6 @@ public class Mechanisms {
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         telescope.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
-//        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setDirection(DcMotor.Direction.REVERSE);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
         telescope.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -238,6 +232,10 @@ public class Mechanisms {
         telescope.setTargetPosition(ticks);
         telescope.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         telescope.setPower(1);
+    }
+
+    public double get_wrist_position(){
+        return wrist_pos;
     }
 
 

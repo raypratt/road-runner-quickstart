@@ -117,13 +117,13 @@ public class Base extends OpMode {
         }
         //High Basket
         else if (gamepad2.y){
-            target_angle = 89;
+            target_angle = 77;
             target_telescope = 4200;
-            mechs.wrist_score();
+            mechs.wrist_basket();
         }
         //High Chamber
         else if (gamepad2.dpad_up){
-            target_angle = 45;
+            target_angle = 35;
             target_telescope = 3500;
             mechs.wrist_chamber();
         }
@@ -167,6 +167,7 @@ public class Base extends OpMode {
         telemetry.addData("arm power", mechs.get_arm_power(target_angle));
         telemetry.addData("Telescope Target", target_telescope);
         telemetry.addData("Telescope in Ticks:", mechs.getTelescopeTicks());
+        telemetry.addData("Wrist Position", mechs.get_wrist_position());
 
 
     }
