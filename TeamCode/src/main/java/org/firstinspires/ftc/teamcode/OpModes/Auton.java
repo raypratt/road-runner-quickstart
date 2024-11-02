@@ -14,13 +14,14 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.mechanisms.Mechanisms;
 
 
-@Autonomous (name="Auton", group="Alpha")
+@TeleOp(name="Auton", group="Alpha")
 public class Auton extends LinearOpMode {
 
     Mechanisms mechs = new Mechanisms();
@@ -39,9 +40,14 @@ public class Auton extends LinearOpMode {
         TrajectoryActionBuilder driveToBars = drive.actionBuilder(initialPose)
                 .strafeTo(new Vector2d( 0,-48));
         TrajectoryActionBuilder firstSample = drive.actionBuilder(new Pose2d( 0,-48, Math.toRadians(90)))
-                .strafeToLinearHeading(new Vector2d(-50,-48),Math.toRadians(90));
+                .strafeToLinearHeading(new Vector2d(-51.9,-48),Math.toRadians(90));
         TrajectoryActionBuilder scoringPosition = drive.actionBuilder(new Pose2d( -50,-48, Math.toRadians(90)))
-                .strafeToLinearHeading(new Vector2d(-60,-60),Math.toRadians(-135));
+                .strafeToLinearHeading(new Vector2d(-58.5,-59.5),Math.toRadians(-140));
+        TrajectoryActionBuilder secondSample = drive.actionBuilder(new Pose2d(-58.5,-59.5, Math.toRadians(-140)))
+                .strafeToLinearHeading(new Vector2d(-61.05,-48),Math.toRadians(90));
+        TrajectoryActionBuilder scoringPosition2 = drive.actionBuilder(new Pose2d( -50,-48, Math.toRadians(90)))
+                .strafeToLinearHeading(new Vector2d(-58.5,-59.5),Math.toRadians(-140));
+
         TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(-53,-51,Math.toRadians(45)))
                 .strafeTo(new Vector2d( 60,-60));
 
@@ -105,7 +111,7 @@ public class Auton extends LinearOpMode {
                             new IntakeOut(),
                             new SleepAction(1),
                             new UpdateTelescope(telescopeAction, 4200),
-                            new SleepAction(0.9),
+                            new SleepAction(0.8),
                             new IntakeOff(),
                             new UpdateTelescope(telescopeAction, 300),
                             new SleepAction(2),
@@ -114,9 +120,39 @@ public class Auton extends LinearOpMode {
                             new WristBasket(),
                             new SleepAction(1),
                             new UpdateTelescope(telescopeAction,4200),
+                            new SleepAction(1),
                             scoringPosition.build(),
                             new SleepAction(2),
-                            new IntakeOut()
+                            new IntakeOut(),
+                            new SleepAction(1),
+                            new IntakeOff(),
+                            new UpdateArm(armAction,82),
+                            new SleepAction(2),
+                            new UpdateTelescope(telescopeAction,100),
+                            new SleepAction(2),
+                            new WristIntake(),
+                            secondSample.build(),
+                            new UpdateArm(armAction,0),
+                            new SleepAction(1),
+                            new IntakeOut(),
+                            new UpdateTelescope(telescopeAction,4200),
+                            new SleepAction(0.8),
+                            new IntakeOff(),
+                            new SleepAction(1),
+                            new UpdateArm(armAction,77),
+                            new WristBasket(),
+                            new SleepAction(1),
+                            scoringPosition2.build(),
+                            new SleepAction(2),
+                            new IntakeOut(),
+                            new SleepAction(2),
+                            new IntakeOff()
+
+
+
+
+
+
                     )
                 )
         );
