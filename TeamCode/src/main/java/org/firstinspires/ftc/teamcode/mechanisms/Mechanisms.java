@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.android.AndroidSoundPool;
 
@@ -29,6 +30,7 @@ public class Mechanisms {
     private Servo wrist_servo;
     private PIDController controller;
     public double wrist_pos;
+    VoltageSensor battery;
 
 
 //    public static double ARM_P = 0.001, ARM_I =0, ARM_D =0.0000, ARM_F =0.05; // Gold Bot
@@ -63,6 +65,7 @@ public class Mechanisms {
         imu = hwMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.DOWN, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         imu.initialize(parameters);
+        battery = hwMap.voltageSensor.get("Control Hub");
 
         //PIDF intis
         controller = new PIDController(ARM_P, ARM_I, ARM_D);
@@ -144,6 +147,12 @@ public class Mechanisms {
     public void intake_out(){
         left_servo.setPower(-1);
         right_servo.setPower(1);
+    }
+
+    public String get_intake_status(){
+        if (left_servo.getPower() == 1){return "IN";}
+        else if (left_servo.getPower()==-1){return "OUT";}
+        else {return "OFF";}
     }
 
     public void wrist_intake(){
@@ -238,7 +247,9 @@ public class Mechanisms {
         return wrist_pos;
     }
 
-
+    public double get_battery(){
+        return battery.getVoltage();
+    }
     /*
     public void lights(Gamepad gamepad1, Gamepad gamepad2, ElapsedTime eTime, int wTime, ElapsedTime vTime) {
         if ((eTime.seconds() - wTime <= wTime) && vTime.seconds() > 2) {

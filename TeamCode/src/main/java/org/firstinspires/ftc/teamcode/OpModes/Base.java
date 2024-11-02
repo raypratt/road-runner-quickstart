@@ -7,7 +7,10 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.logging.data;
 
+import org.firstinspires.ftc.teamcode.logging.Datalogger;
+import org.firstinspires.ftc.teamcode.logging.log;
 import org.firstinspires.ftc.teamcode.mechanisms.Mechanisms;
 
 @Config
@@ -19,7 +22,8 @@ public class Base extends OpMode {
     public int wTime = 115;
     public static int target_angle = 5;
     public static int target_telescope = 0;
-
+    data.Datalog datalog;
+    public int i;
     //Initialize
     Mechanisms mechs = new Mechanisms();
 
@@ -33,7 +37,11 @@ public class Base extends OpMode {
 
         mechs.init(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
+        datalog = new data.Datalog("JPEC_datalog_01");
+        datalog.opModeStatus.set("INIT");
+        datalog.battery.set(mechs.get_battery());
+        datalog.writeLine();
+        i = 0;
     }
 
     //@Override
@@ -44,6 +52,7 @@ public class Base extends OpMode {
 
     @Override
     public void loop(){
+        i++;
         //Drive Gear
         if (gamepad1.a) {
             mechs.setGear(0.33);
@@ -140,6 +149,8 @@ public class Base extends OpMode {
         }
 
         //mechs.arm_move(gamepad2.left_stick_y);
+
+        //Safety settings for arm and telescope
         if (target_angle > 89) target_angle = 89;
         else if (target_angle < 0) target_angle = 0;
         mechs.set_arm(target_angle);
@@ -151,6 +162,43 @@ public class Base extends OpMode {
 
         mechs.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
         //mechs.lights(gamepad1, gamepad2, elapsedTime, wTime, vibrateTime);
+
+        datalog.loopCounter.set(i);
+        datalog.battery.set(mechs.get_battery());
+        datalog.opModeStatus.set("Running");
+        datalog.loopCounter.set(i);
+        datalog.yaw.set(mechs.getBotHeading());
+        datalog.battery.set(mechs.get_battery());
+        datalog.armAngle.set(mechs.get_arm_pos_degrees());
+        datalog.telescope.set(mechs.getTelescopeTicks());
+        datalog.wristPos.set(mechs.get_wrist_position());
+        datalog.leftFront.set(mechs.getLFSpeed());
+        datalog.rightFront.set(mechs.getRFSpeed());
+        datalog.leftBack.set(mechs.getLBSpeed());
+        datalog.rightBack.set(mechs.getRBSpeed());
+        datalog.intake.set(mechs.get_intake_status());
+        datalog.gear.set(mechs.getGear());
+        datalog.gp1Lx.set(gamepad1.left_stick_x);
+        datalog.gp1Ly.set(gamepad1.left_stick_y);
+        datalog.gp1Rx.set(gamepad1.right_stick_x);
+        datalog.gp2Lx.set(gamepad2.left_stick_x);
+        datalog.gp2Ly.set(gamepad2.left_stick_y);
+        datalog.gp2Rx.set(gamepad2.right_stick_x);
+        datalog.gp2Ry.set(gamepad2.right_stick_y);
+        datalog.gp2DU.set(gamepad2.dpad_up);
+        datalog.gp2DD.set(gamepad2.dpad_down);
+        datalog.gp2DR.set(gamepad2.dpad_right);
+        datalog.gp2DL.set(gamepad2.dpad_left);
+        datalog.gp2Cross.set(gamepad2.cross);
+        datalog.gp2Square.set(gamepad2.square);
+        datalog.gp2Circle.set(gamepad2.circle);
+        datalog.gp2Triangle.set(gamepad2.triangle);
+        datalog.gp2LT.set(gamepad2.left_trigger);
+        datalog.gp2RT.set(gamepad2.right_trigger);
+        datalog.gp2LB.set(gamepad2.left_bumper);
+        datalog.gp2RB.set(gamepad2.right_bumper);
+
+        datalog.writeLine();
 
         telemetry.addData("Gear", mechs.getGear());
         telemetry.addData("RF Speed", mechs.getRFSpeed());
@@ -171,5 +219,6 @@ public class Base extends OpMode {
 
 
     }
+
 
 }
