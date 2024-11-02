@@ -151,8 +151,8 @@ public class Mechanisms {
     }
 
     public void wrist_basket(){
-        wrist_pos= 0.5;
-        wrist_servo.setPosition(0.5);
+        wrist_pos = 0.7;
+        wrist_servo.setPosition(0.7);
     }
 
     public void wrist_score() {
@@ -166,8 +166,8 @@ public class Mechanisms {
     }
 
     public void  wrist_chamber() {
-        wrist_pos = 0.9;
-        wrist_servo.setPosition(0.9);
+        wrist_pos = 0.5;
+        wrist_servo.setPosition(0.5);
     }
 
     public void arm_out(){

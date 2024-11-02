@@ -39,9 +39,9 @@ public class Auton extends LinearOpMode {
         TrajectoryActionBuilder driveToBars = drive.actionBuilder(initialPose)
                 .strafeTo(new Vector2d( 0,-48));
         TrajectoryActionBuilder firstSample = drive.actionBuilder(new Pose2d( 0,-48, Math.toRadians(90)))
-                .strafeToLinearHeading(new Vector2d(-30,-45.5),Math.toRadians(-45));
-        TrajectoryActionBuilder scoringPosition = drive.actionBuilder(new Pose2d( 0,-48, Math.toRadians(90)))
-                .strafeToLinearHeading(new Vector2d(-53,-51),Math.toRadians(45));
+                .strafeToLinearHeading(new Vector2d(-50,-48),Math.toRadians(90));
+        TrajectoryActionBuilder scoringPosition = drive.actionBuilder(new Pose2d( -50,-48, Math.toRadians(90)))
+                .strafeToLinearHeading(new Vector2d(-60,-60),Math.toRadians(-135));
         TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(-53,-51,Math.toRadians(45)))
                 .strafeTo(new Vector2d( 60,-60));
 
@@ -99,21 +99,24 @@ public class Auton extends LinearOpMode {
                             new IntakeOff(),
                             new UpdateTelescope(telescopeAction, 300),
                             new SleepAction(1),
+                            new WristIntake(),
                             firstSample.build(),
                             new UpdateArm(armAction,0),
-                            new IntakeIn(),
-                            new UpdateTelescope(telescopeAction, 4200),
+                            new IntakeOut(),
                             new SleepAction(1),
+                            new UpdateTelescope(telescopeAction, 4200),
+                            new SleepAction(0.9),
                             new IntakeOff(),
-                            new WristBasket(),
                             new UpdateTelescope(telescopeAction, 300),
-                            scoringPosition.build(),
+                            new SleepAction(2),
                             new UpdateArm(armAction,77),
+                            new SleepAction(2),
+                            new WristBasket(),
                             new SleepAction(1),
                             new UpdateTelescope(telescopeAction,4200),
+                            scoringPosition.build(),
+                            new SleepAction(2),
                             new IntakeOut()
-
-
                     )
                 )
         );
