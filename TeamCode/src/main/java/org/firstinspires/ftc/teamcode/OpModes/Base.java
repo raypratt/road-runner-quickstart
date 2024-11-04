@@ -53,6 +53,27 @@ public class Base extends OpMode {
     @Override
     public void loop(){
         i++;
+        driverControls();
+        manualControls();
+        buttonSetpoints();
+
+        //Safety settings for arm and telescope
+        if (target_angle > 89) target_angle = 89;
+        else if (target_angle < 0) target_angle = 0;
+        mechs.set_arm(target_angle);
+
+        if (target_telescope > 4200) target_telescope = 4200;
+        else if (target_telescope < 0) target_telescope = 0;
+
+        mechs.set_telescope(target_telescope);
+
+        mechs.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        //mechs.lights(gamepad1, gamepad2, elapsedTime, wTime, vibrateTime);
+
+        telemetryData();
+        loggingTeleOp();
+    }
+    private void driverControls() {
         //Drive Gear
         if (gamepad1.a) {
             mechs.setGear(0.33);
@@ -71,6 +92,8 @@ public class Base extends OpMode {
         if (gamepad1.share) {
             mechs.resetYaw();
         }
+    }
+    private void manualControls() {
 
         //Intake On/Off
         if (gamepad2.right_bumper){
@@ -95,17 +118,15 @@ public class Base extends OpMode {
         if (gamepad2.right_trigger>0 && gamepad1.circle){
             target_telescope = target_telescope + 50;}
         else if (gamepad2.left_trigger>0 && gamepad1.circle){
-           target_telescope = target_telescope - 50;}
+            target_telescope = target_telescope - 50;}
 
         //Manual Angle Control
         if (gamepad2.left_stick_y<0 /*&& gamepad1.circle*/){
             target_angle = target_angle + 1;}
         else if (gamepad2.left_stick_y >0 /*&& gamepad1.circle*/){
             target_angle = target_angle - 1;}
-
-//        if (gamepad2.right_bumper) mechs.intake_out();
-//        else if (gamepad2.left_bumper)mechs.intake_on();
-//        else mechs.intake_off();
+    }
+    private void buttonSetpoints() {
         //Stow
         if (gamepad2.x){
             target_angle = 0;
@@ -147,22 +168,26 @@ public class Base extends OpMode {
             target_telescope = 1200;
             mechs.wrist_score();
         }
-
-        //mechs.arm_move(gamepad2.left_stick_y);
-
-        //Safety settings for arm and telescope
-        if (target_angle > 89) target_angle = 89;
-        else if (target_angle < 0) target_angle = 0;
-        mechs.set_arm(target_angle);
-
-        if (target_telescope > 4200) target_telescope = 4200;
-        else if (target_telescope < 0) target_telescope = 0;
-
-        mechs.set_telescope(target_telescope);
-
-        mechs.drive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
-        //mechs.lights(gamepad1, gamepad2, elapsedTime, wTime, vibrateTime);
-
+    }
+    private void telemetryData(){
+        telemetry.addData("Gear", mechs.getGear());
+        telemetry.addData("RF Speed", mechs.getRFSpeed());
+        telemetry.addData("LF Speed", mechs.getLFSpeed());
+        telemetry.addData("RB Speed", mechs.getRBSpeed());
+        telemetry.addData("LB Speed", mechs.getLBSpeed());
+        telemetry.addData("leftstick x", gamepad1.left_stick_x);
+        telemetry.addData("leftstick y", gamepad1.left_stick_y);
+        telemetry.addData("rightstickx", gamepad1.right_stick_x);
+        telemetry.addData("botHeading", mechs.getBotHeading());
+        telemetry.addData("arm angle degrees", mechs.get_arm_pos_degrees());
+        telemetry.addData("arm angle ticks", mechs.get_arm_pos_ticks());
+        telemetry.addData("arm target", target_angle);
+        telemetry.addData("arm power", mechs.get_arm_power(target_angle));
+        telemetry.addData("Telescope Target", target_telescope);
+        telemetry.addData("Telescope in Ticks:", mechs.getTelescopeTicks());
+        telemetry.addData("Wrist Position", mechs.get_wrist_position());
+    }
+    private void loggingTeleOp(){
         datalog.loopCounter.set(i);
         datalog.battery.set(mechs.get_battery());
         datalog.opModeStatus.set("Running");
@@ -199,25 +224,6 @@ public class Base extends OpMode {
         datalog.gp2RB.set(gamepad2.right_bumper);
 
         datalog.writeLine();
-
-        telemetry.addData("Gear", mechs.getGear());
-        telemetry.addData("RF Speed", mechs.getRFSpeed());
-        telemetry.addData("LF Speed", mechs.getLFSpeed());
-        telemetry.addData("RB Speed", mechs.getRBSpeed());
-        telemetry.addData("LB Speed", mechs.getLBSpeed());
-        telemetry.addData("leftstick x", gamepad1.left_stick_x);
-        telemetry.addData("leftstick y", gamepad1.left_stick_y);
-        telemetry.addData("rightstickx", gamepad1.right_stick_x);
-        telemetry.addData("botHeading", mechs.getBotHeading());
-        telemetry.addData("arm angle degrees", mechs.get_arm_pos_degrees());
-        telemetry.addData("arm angle ticks", mechs.get_arm_pos_ticks());
-        telemetry.addData("arm target", target_angle);
-        telemetry.addData("arm power", mechs.get_arm_power(target_angle));
-        telemetry.addData("Telescope Target", target_telescope);
-        telemetry.addData("Telescope in Ticks:", mechs.getTelescopeTicks());
-        telemetry.addData("Wrist Position", mechs.get_wrist_position());
-
-
     }
 
 
