@@ -42,6 +42,7 @@ public class Base extends OpMode {
         datalog.battery.set(mechs.get_battery());
         datalog.writeLine();
         i = 0;
+        mechs.setWinch_servo(1);
     }
 
     //@Override
@@ -72,6 +73,7 @@ public class Base extends OpMode {
 
         telemetryData();
         loggingTeleOp();
+
     }
     private void driverControls() {
         //Drive Gear
@@ -125,6 +127,7 @@ public class Base extends OpMode {
             target_angle = target_angle + 1;}
         else if (gamepad2.left_stick_y >0 /*&& gamepad1.circle*/){
             target_angle = target_angle - 1;}
+
     }
     private void buttonSetpoints() {
         //Stow

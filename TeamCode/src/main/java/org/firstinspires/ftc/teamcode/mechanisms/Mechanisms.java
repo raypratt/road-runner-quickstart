@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.android.AndroidSoundPool;
 
@@ -28,9 +30,11 @@ public class Mechanisms {
     AndroidSoundPool androidSoundPool;
     private CRServo left_servo,right_servo;
     private Servo wrist_servo;
+    private Servo winch_servo;
     private PIDController controller;
     public double wrist_pos;
     VoltageSensor battery;
+    private AnalogInput potentiometer;
 
 
 //    public static double ARM_P = 0.001, ARM_I =0, ARM_D =0.0000, ARM_F =0.05; // Gold Bot
@@ -40,6 +44,7 @@ public class Mechanisms {
     private final double ticks_in_degrees = 8192/360;
     private static double ARM_OFFSET = 0;
     private final double ticks_to_inches = 1; // set = to 1 if using just ticks.
+    private final double TELESCOPE_OFFSET = 150;
     public void init(HardwareMap hwMap) {
         //Motor inits
         rightFront = hwMap.get(DcMotor.class, "rightFront");
@@ -60,6 +65,9 @@ public class Mechanisms {
         left_servo = hwMap.get (CRServo.class,"left_servo");
         right_servo = hwMap.get (CRServo.class,"right_servo");
         wrist_servo = hwMap.get(Servo.class,"wrist_servo");
+        winch_servo = hwMap.get(Servo.class,"winch_servo");
+
+        potentiometer = hwMap.get(AnalogInput.class, "telePot");
 
         //IMU inits
         imu = hwMap.get(IMU.class, "imu");
@@ -178,6 +186,10 @@ public class Mechanisms {
         wrist_pos = 0.5;
         wrist_servo.setPosition(0.5);
     }
+    public void setWinch_servo(double inc){
+        winch_servo.setPosition(inc);
+
+    }
 
     public void arm_out(){
         telescope.setPower(1);
@@ -192,7 +204,7 @@ public class Mechanisms {
     }
     public void set_telescope(double target){
         controller.setPID(TELESCOPE_P, TELESCOPE_I, TELESCOPE_D);
-        int telescopePos = telescope.getCurrentPosition();
+        double telescopePos = getPotentiometer();
 
         double pid = controller.calculate(telescopePos*ticks_to_inches, target);
         double power = pid;
@@ -206,7 +218,13 @@ public class Mechanisms {
     public int getTelescopeTicks() {
         return telescope.getCurrentPosition();
     }
-    
+
+    public double getPotentiometer() {
+        return Range.scale(potentiometer.getVoltage(), 0, potentiometer.getMaxVoltage(), 0, 3600) - TELESCOPE_OFFSET;
+    }
+
+
+
     public void arm_move(double power){
         arm.setPower(power);
     }

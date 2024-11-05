@@ -30,7 +30,7 @@ public class Auton extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Pose2d initialPose = new Pose2d(0, -62.5, Math.toRadians(90));
+        Pose2d initialPose = new Pose2d(-34, -62.5, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
         mechs.init(hardwareMap);
 
@@ -38,8 +38,8 @@ public class Auton extends LinearOpMode {
         int visionOutputPosition = 1;
 
         TrajectoryActionBuilder driveToBars = drive.actionBuilder(initialPose)
-                .strafeTo(new Vector2d( 0,-48));
-        TrajectoryActionBuilder firstSample = drive.actionBuilder(new Pose2d( 0,-48, Math.toRadians(90)))
+                .strafeTo(new Vector2d( -8,-48));
+        TrajectoryActionBuilder firstSample = drive.actionBuilder(new Pose2d( -8,-48, Math.toRadians(90)))
                 .strafeToLinearHeading(new Vector2d(-51.9,-48),Math.toRadians(90));
         TrajectoryActionBuilder scoringPosition = drive.actionBuilder(new Pose2d( -50,-48, Math.toRadians(90)))
                 .strafeToLinearHeading(new Vector2d(-58.5,-59.5),Math.toRadians(-140));

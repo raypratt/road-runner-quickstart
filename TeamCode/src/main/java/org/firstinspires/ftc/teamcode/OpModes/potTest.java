@@ -17,10 +17,10 @@ public class potTest extends OpMode {
 
     @Override
     public void loop() {
-        telemetry.addData("TelePot Angle", getPotAngle());
+        telemetry.addData("TelePot Angle", getPotodemtery());
     }
 
-    public double getPotAngle(){
+    public double getPotodemtery(){
         return Range.scale(telePot.getVoltage(), 0, telePot.getMaxVoltage(), 0, 3600);
     }
 }
