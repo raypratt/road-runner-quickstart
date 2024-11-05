@@ -191,9 +191,7 @@ public class Base extends OpMode {
         datalog.loopCounter.set(i);
         datalog.battery.set(mechs.get_battery());
         datalog.opModeStatus.set("Running");
-        datalog.loopCounter.set(i);
         datalog.yaw.set(mechs.getBotHeading());
-        datalog.battery.set(mechs.get_battery());
         datalog.armAngle.set(mechs.get_arm_pos_degrees());
         datalog.telescope.set(mechs.getTelescopeTicks());
         datalog.wristPos.set(mechs.get_wrist_position());
