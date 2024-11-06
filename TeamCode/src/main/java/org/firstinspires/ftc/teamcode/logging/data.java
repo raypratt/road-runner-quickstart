@@ -42,6 +42,9 @@ public class data {
         public Datalogger.GenericField gp2RT        = new Datalogger.GenericField("GamePad 2 Right Trigger");
         public Datalogger.GenericField gp2LB        = new Datalogger.GenericField("GamePad 2 Left Button");
         public Datalogger.GenericField gp2RB        = new Datalogger.GenericField("GamePad 2 Right Button");
+        public Datalogger.GenericField poseX        = new Datalogger.GenericField("poseX");
+        public Datalogger.GenericField poseY        = new Datalogger.GenericField("poseY");
+        public Datalogger.GenericField poseH        = new Datalogger.GenericField("poseH");
 
         public Datalog(String name)
         {
@@ -65,6 +68,9 @@ public class data {
                             armAngle,
                             telescope,
                             wristPos,
+                            poseX,
+                            poseY,
+                            poseH,
                             leftFront,
                             rightFront,
                             leftBack,
