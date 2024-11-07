@@ -295,4 +295,48 @@ public class Mechanisms {
             vTime.reset();
         }
     } */
+
+    public void init(HardwareMap hwMap) {
+        //Motor inits
+        this.startVoltage = 0;
+        this.endVoltage = 5;
+        rightFront = hwMap.get(DcMotor.class, "rightFront");
+        leftFront = hwMap.get(DcMotor.class, "leftFront");
+        rightBack = hwMap.get(DcMotor.class, "rightBack");
+        leftBack = hwMap.get(DcMotor.class, "leftBack");
+        telescope = hwMap.get(DcMotor.class, "telescope");
+        arm = hwMap.get(DcMotor.class, "arm");
+
+        arm.setDirection(DcMotorSimple.Direction.REVERSE);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        telescope.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
+        rightBack.setDirection(DcMotor.Direction.REVERSE);
+        telescope.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //Servo Inits
+        left_servo = hwMap.get (CRServo.class,"left_servo");
+        right_servo = hwMap.get (CRServo.class,"right_servo");
+        wrist_servo = hwMap.get(Servo.class,"wrist_servo");
+        winch_servo = hwMap.get(Servo.class,"winch_servo");
+
+        potentiometer = hwMap.get(AnalogInput.class, "telePot");
+
+        //IMU inits
+        imu = hwMap.get(IMU.class, "imu");
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.DOWN, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+        imu.initialize(parameters);
+        battery = hwMap.voltageSensor.get("Control Hub");
+
+        //PIDF intis
+        controller = new PIDController(ARM_P, ARM_I, ARM_D);
+        int arm_start_ticks = arm.getCurrentPosition();
+
+        //LED init
+        //led = hwMap.get(RevBlinkinLedDriver.class, "led");
+
+        //Sound inits
+        //androidSoundPool = new AndroidSoundPool();
+        //androidSoundPool.setVolume(1);
+    }
 }

@@ -32,7 +32,7 @@ public class Auton extends LinearOpMode {
     public void runOpMode() {
         Pose2d initialPose = new Pose2d(-34, -62.5, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
-        mechs.init(hardwareMap);
+        mechs.init(hardwareMap,0.39546, 2.239);
 
         // vision here that outputs position
         int visionOutputPosition = 1;
@@ -55,14 +55,16 @@ public class Auton extends LinearOpMode {
 
 
         while (!isStopRequested() && !opModeIsActive()) {
-            telemetry.addLine("Press X for Blue, 0 for Red");
+            telemetry.addLine("Press Cross or A for Gold, Circle or B for Maroon");
             if (gamepad2.cross){
-                telemetry.addLine("Blue Selected");
-                color = "blue";
+                telemetry.addLine("Gold Selected");
+                color = "gold";
+                mechs.startVoltage = 0.705;
+                mechs.endVoltage = 2.781;
             }
             if (gamepad2.circle){
-                telemetry.addLine("Red Selected");
-                color = "red";
+                telemetry.addLine("Maroon Selected");
+                color = "maroon";
             }
             int position = visionOutputPosition;
             telemetry.addData("Position during Init", position);

@@ -31,7 +31,7 @@ public class ParkAuton extends LinearOpMode {
     public void runOpMode() {
         Pose2d initialPose = new Pose2d(0, -62.5, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
-        mechs.init(hardwareMap);
+        mechs.init(hardwareMap,0.39546, 2.239);
 
         // vision here that outputs position
         int visionOutputPosition = 1;
@@ -60,6 +60,8 @@ public class ParkAuton extends LinearOpMode {
             if (gamepad2.cross){
                 telemetry.addLine("Gold Selected");
                 color = "gold";
+                mechs.startVoltage = 0.705;
+                mechs.endVoltage = 2.781;
             }
             if (gamepad2.circle){
                 telemetry.addLine("Maroon Selected");
