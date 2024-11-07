@@ -56,14 +56,14 @@ public class ParkAuton extends LinearOpMode {
                 .waitSeconds(3);
 
         while (!isStopRequested() && !opModeIsActive()) {
-            telemetry.addLine("Press X for Blue, 0 for Red");
+            telemetry.addLine("Press Cross or A for Gold, Circle or B for Maroon");
             if (gamepad2.cross){
-                telemetry.addLine("Blue Selected");
-                color = "blue";
+                telemetry.addLine("Gold Selected");
+                color = "gold";
             }
             if (gamepad2.circle){
-                telemetry.addLine("Red Selected");
-                color = "red";
+                telemetry.addLine("Maroon Selected");
+                color = "maroon";
             }
             int position = visionOutputPosition;
             telemetry.addData("Position during Init", position);
