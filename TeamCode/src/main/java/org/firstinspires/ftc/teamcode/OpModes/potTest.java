@@ -6,18 +6,21 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.mechanisms.Mechanisms;
+
 @TeleOp
 public class potTest extends OpMode {
     private AnalogInput telePot;
-
+    Mechanisms mechs = new Mechanisms();
     @Override
     public void init() {
-        telePot = hardwareMap.get(AnalogInput.class, "telePot");
+        mechs.init(hardwareMap);
     }
 
     @Override
     public void loop() {
-        telemetry.addData("TelePot Angle", getPotodemtery());
+        telemetry.addData("TelePot Angle", mechs.getPotentiometer());
+        telemetry.addData("TelePot voltage", mechs.getVoltagePotentiometer());
     }
 
     public double getPotodemtery(){

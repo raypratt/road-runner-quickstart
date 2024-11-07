@@ -47,7 +47,9 @@ public class Auton extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-61.05,-48),Math.toRadians(90));
         TrajectoryActionBuilder scoringPosition2 = drive.actionBuilder(new Pose2d( -50,-48, Math.toRadians(90)))
                 .strafeToLinearHeading(new Vector2d(-58.5,-59.5),Math.toRadians(-140));
-
+        TrajectoryActionBuilder driveToSubmersible = drive.actionBuilder(new Pose2d( -58.5,-59.5, Math.toRadians(-140)))
+                .strafeToLinearHeading(new Vector2d(-36,0),Math.toRadians(-140));
+        
         TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(-53,-51,Math.toRadians(45)))
                 .strafeTo(new Vector2d( 60,-60));
 
@@ -65,7 +67,7 @@ public class Auton extends LinearOpMode {
             int position = visionOutputPosition;
             telemetry.addData("Position during Init", position);
             telemetry.update();
-            mechs.set_arm(39);
+            mechs.set_arm(40);
             mechs.set_telescope(0);
         }
 
@@ -107,12 +109,13 @@ public class Auton extends LinearOpMode {
                             new SleepAction(1),
                             new WristIntake(),
                             firstSample.build(),
-                            new UpdateArm(armAction,0),
+                            new UpdateArm(armAction,3),
                             new IntakeOut(),
                             new SleepAction(1),
                             new UpdateTelescope(telescopeAction, 4200),
-                            new SleepAction(0.8),
+                            new SleepAction(0.9),
                             new IntakeOff(),
+                            new SleepAction(1),
                             new UpdateTelescope(telescopeAction, 300),
                             new SleepAction(2),
                             new UpdateArm(armAction,77),
@@ -132,7 +135,7 @@ public class Auton extends LinearOpMode {
                             new SleepAction(2),
                             new WristIntake(),
                             secondSample.build(),
-                            new UpdateArm(armAction,0),
+                            new UpdateArm(armAction,3),
                             new SleepAction(1),
                             new IntakeOut(),
                             new UpdateTelescope(telescopeAction,4200),
@@ -146,16 +149,26 @@ public class Auton extends LinearOpMode {
                             new SleepAction(2),
                             new IntakeOut(),
                             new SleepAction(2),
-                            new IntakeOff()
-
-
-
-
-
+                            new IntakeOff(),
+                            new SleepAction(1),
+                            new UpdateArm(armAction,82),
+                            new SleepAction(1),
+                            new UpdateTelescope(telescopeAction,100),
+                            driveToSubmersible.build(),
+                            new LockTelescope()
 
                     )
                 )
         );
+    }
+    public class LockTelescope implements Action {
+        // checks if the lift motor has been powered on
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            mechs.setWinch_servo(0);
+            return false;
+        }
     }
     public class WristBasket implements Action {
         // checks if the lift motor has been powered on

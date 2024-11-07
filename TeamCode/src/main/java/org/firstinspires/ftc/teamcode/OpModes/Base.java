@@ -4,14 +4,13 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.drivetrain.MecanumDrive;
 import org.firstinspires.ftc.teamcode.logging.data;
+
+import org.firstinspires.ftc.teamcode.logging.Datalogger;
+import org.firstinspires.ftc.teamcode.logging.log;
 import org.firstinspires.ftc.teamcode.mechanisms.Mechanisms;
 
 @Config
@@ -25,11 +24,6 @@ public class Base extends OpMode {
     public static int target_telescope = 0;
     data.Datalog datalog;
     public int i;
-    public static double poseX;
-    public static double poseY;
-    public static double poseH;
-    MecanumDrive drive =  new MecanumDrive(hardwareMap, new Pose2d(poseX, poseY, poseH));
-
     //Initialize
     Mechanisms mechs = new Mechanisms();
 
@@ -41,7 +35,7 @@ public class Base extends OpMode {
         elapsedTime.startTime();
         vibrateTime.startTime();
 
-        mechs.init(hardwareMap);
+        mechs.init(hardwareMap,0.39546, 2.239);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         datalog = new data.Datalog("JPEC_datalog_01");
         datalog.opModeStatus.set("INIT");
@@ -63,7 +57,6 @@ public class Base extends OpMode {
         driverControls();
         manualControls();
         buttonSetpoints();
-        drive.updatePoseEstimate();
 
         //Safety settings for arm and telescope
         if (target_angle > 89) target_angle = 89;
@@ -196,10 +189,6 @@ public class Base extends OpMode {
         telemetry.addData("Telescope Target", target_telescope);
         telemetry.addData("Telescope in Ticks:", mechs.getTelescopeTicks());
         telemetry.addData("Wrist Position", mechs.get_wrist_position());
-        telemetry.addData("poseX", drive.pose.position.x);
-        telemetry.addData("poseY", drive.pose.position.y);
-        telemetry.addData("poseH", Math.toDegrees(drive.pose.heading.toDouble()));
-
     }
     private void loggingTeleOp(){
         datalog.loopCounter.set(i);
@@ -213,9 +202,6 @@ public class Base extends OpMode {
         datalog.rightFront.set(mechs.getRFSpeed());
         datalog.leftBack.set(mechs.getLBSpeed());
         datalog.rightBack.set(mechs.getRBSpeed());
-        datalog.poseX.set(drive.pose.position.x);
-        datalog.poseY.set(drive.pose.position.x);
-        datalog.poseH.set(Math.toDegrees(drive.pose.heading.toDouble()));
         datalog.intake.set(mechs.get_intake_status());
         datalog.gear.set(mechs.getGear());
         datalog.gp1Lx.set(gamepad1.left_stick_x);
@@ -239,6 +225,11 @@ public class Base extends OpMode {
         datalog.gp2RB.set(gamepad2.right_bumper);
 
         datalog.writeLine();
+    }
+
+    @Override
+    public void stop (){
+        mechs.setWinch_servo(0);
     }
 
 
