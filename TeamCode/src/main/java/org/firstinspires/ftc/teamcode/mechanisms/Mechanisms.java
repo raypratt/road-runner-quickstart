@@ -35,7 +35,7 @@ public class Mechanisms {
     public double wrist_pos;
     VoltageSensor battery;
     private AnalogInput potentiometer;
-
+    public double startVoltage,endVoltage;
 
 //    public static double ARM_P = 0.001, ARM_I =0, ARM_D =0.0000, ARM_F =0.05; // Gold Bot
     public static double ARM_P = 0.003, ARM_I =0, ARM_D =0.0000, ARM_F =0.05;
@@ -44,9 +44,11 @@ public class Mechanisms {
     private final double ticks_in_degrees = 8192/360;
     private static double ARM_OFFSET = 0;
     private final double ticks_to_inches = 1; // set = to 1 if using just ticks.
-    private final double TELESCOPE_OFFSET = 150;
-    public void init(HardwareMap hwMap) {
+    private final double TELESCOPE_OFFSET = 430;
+    public void init(HardwareMap hwMap, double startVoltage,double endVoltage) {
         //Motor inits
+        this.startVoltage = startVoltage;
+        this.endVoltage = endVoltage;
         rightFront = hwMap.get(DcMotor.class, "rightFront");
         leftFront = hwMap.get(DcMotor.class, "leftFront");
         rightBack = hwMap.get(DcMotor.class, "rightBack");
@@ -220,7 +222,10 @@ public class Mechanisms {
     }
 
     public double getPotentiometer() {
-        return Range.scale(potentiometer.getVoltage(), 0, potentiometer.getMaxVoltage(), 0, 3600) - TELESCOPE_OFFSET;
+        return (Range.scale(potentiometer.getVoltage(), startVoltage, endVoltage, 0, 4300));
+    }
+    public double getVoltagePotentiometer() {
+        return potentiometer.getVoltage();
     }
 
 
