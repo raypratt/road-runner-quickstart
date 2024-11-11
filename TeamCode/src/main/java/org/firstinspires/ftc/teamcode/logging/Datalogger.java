@@ -289,9 +289,10 @@ public class Datalogger
                 fields = tmp;
             }
 
+
             try
             {
-                BufferedCsvWriter bufferedCsvWriter = new BufferedCsvWriter(String.format("/sdcard/FIRST/java/src/Datalogs/%s.txt", filename));
+                BufferedCsvWriter bufferedCsvWriter = new BufferedCsvWriter(String.format("/sdcard/FIRST/Datalogs/%s.txt", filename));
                 return new Datalogger(bufferedCsvWriter, fields);
             }
             catch (IOException e)
@@ -313,6 +314,11 @@ public class Datalogger
             if (!tmp.exists())
             {
                 tmp.getParentFile().mkdirs();
+            }
+            int counter = 0;
+            while (tmp.exists()) {
+                tmp = new File("/sdcard/FIRST/Datalogs/JPEC_datalog(" + counter + ")" + ".csv");
+                counter++;
             }
 
             fileWriter = new FileWriter(filepath, false);

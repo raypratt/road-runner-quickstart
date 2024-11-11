@@ -37,7 +37,7 @@ public class Base extends OpMode {
 
         mechs.init(hardwareMap,0.39546, 2.239);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        datalog = new data.Datalog("JPEC_datalog_01");
+        datalog = new data.Datalog("JPEC_datalog");
         datalog.opModeStatus.set("INIT");
         datalog.battery.set(mechs.get_battery());
         datalog.writeLine();
