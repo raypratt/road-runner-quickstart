@@ -217,7 +217,7 @@ public class Mechanisms {
 
         double pid = controller.calculate(telescopePos*ticks_to_inches, target);
         double power = pid;
-        if (target==0 && telescopePos < 100) {
+        if (telescopePos < 100) {
             power = -0.1;
         }
         telescopePower = power;
