@@ -26,7 +26,7 @@ public class Base extends OpMode {
     public int i;
     //Initialize
     Mechanisms mechs = new Mechanisms();
-
+    String color;
     @Override
      public void init(){
         elapsedTime = new ElapsedTime();
@@ -35,17 +35,32 @@ public class Base extends OpMode {
         elapsedTime.startTime();
         vibrateTime.startTime();
 
-        mechs.init(hardwareMap,0.39546, 2.239);
+        mechs.init(hardwareMap,0.774, 2.755);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         datalog = new data.Datalog("JPEC_datalog");
         datalog.opModeStatus.set("INIT");
         datalog.battery.set(mechs.get_battery());
         datalog.writeLine();
         i = 0;
-        mechs.setWinch_servo(1);
+        mechs.setWinch_servo(0.7);
+
     }
 
-    //@Override
+
+    @Override
+    public void init_loop() {
+        telemetry.addLine("Press Cross or A for Gold, Circle or B for Maroon");
+        if (gamepad2.cross){
+            telemetry.addLine("Gold Selected");
+            color = "gold";
+            mechs.startVoltage = 0.44;
+            mechs.endVoltage = 2.233;
+        }
+        if (gamepad2.circle){
+            telemetry.addLine("Maroon Selected");
+            color = "maroon";
+        }
+    }
     //public void start(){
     //    elapsedTime.reset();
     //    vibrateTime.reset();
@@ -139,7 +154,7 @@ public class Base extends OpMode {
         //Long Reach
         else if (gamepad2.b){
             target_angle = 0;
-            target_telescope = 4494;
+            target_telescope = 2800;
             mechs.wrist_intake();
         }
         //Short Reach
@@ -189,6 +204,8 @@ public class Base extends OpMode {
         telemetry.addData("Telescope Target", target_telescope);
         telemetry.addData("Telescope in Ticks:", mechs.getTelescopeTicks());
         telemetry.addData("Wrist Position", mechs.get_wrist_position());
+        telemetry.addData("getPotentiometer",mechs.getPotentiometer());
+        telemetry.addData("Get Telescope Power", mechs.getTelescopePower());
     }
     private void loggingTeleOp(){
         datalog.loopCounter.set(i);
@@ -228,8 +245,8 @@ public class Base extends OpMode {
     }
 
     @Override
-    public void stop (){
-        mechs.setWinch_servo(0);
+    public void stop () {
+        mechs.setWinch_servo(1);
     }
 
 

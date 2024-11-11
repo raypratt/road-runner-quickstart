@@ -31,7 +31,7 @@ public class ParkAuton extends LinearOpMode {
     public void runOpMode() {
         Pose2d initialPose = new Pose2d(0, -62.5, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
-        mechs.init(hardwareMap,0.39546, 2.239);
+        mechs.init(hardwareMap,0.774, 2.755);
 
         // vision here that outputs position
         int visionOutputPosition = 1;
@@ -60,8 +60,8 @@ public class ParkAuton extends LinearOpMode {
             if (gamepad2.cross){
                 telemetry.addLine("Gold Selected");
                 color = "gold";
-                mechs.startVoltage = 0.705;
-                mechs.endVoltage = 2.781;
+                mechs.startVoltage = 0.44;
+                mechs.endVoltage = 2.233;
             }
             if (gamepad2.circle){
                 telemetry.addLine("Maroon Selected");
@@ -72,6 +72,7 @@ public class ParkAuton extends LinearOpMode {
             telemetry.update();
             mechs.set_arm(39);
             mechs.set_telescope(0);
+            mechs.setWinch_servo(0.7);
         }
 
 //        int startPosition = visionOutputPosition;
@@ -109,11 +110,25 @@ public class ParkAuton extends LinearOpMode {
                                 new IntakeOff(),
                                 new UpdateTelescope(telescopeAction, 300),
                                 new SleepAction(1),
-                                park.build()
+                                park.build(),
+                                new UpdateTelescope(telescopeAction, 4000),
+                                new UpdateArm(armAction, 0),
+                                new SleepAction(3),
+                                new LockTelescope()
 //
                         )
                 )
         );
+    }
+
+    public class LockTelescope implements Action {
+        // checks if the lift motor has been powered on
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            mechs.setWinch_servo(1);
+            return false;
+        }
     }
 
     public class IntakeOut implements Action {

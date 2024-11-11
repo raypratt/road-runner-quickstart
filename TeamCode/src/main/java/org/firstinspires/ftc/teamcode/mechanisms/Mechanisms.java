@@ -181,6 +181,12 @@ public class Mechanisms {
 
     public void wrist(double inc) {
         wrist_pos += inc;
+        if (wrist_pos < 0) {
+            wrist_pos = 0;
+        }
+        if (wrist_pos > 1) {
+            wrist_pos = 1;
+        }
         wrist_servo.setPosition(wrist_pos);
     }
 
@@ -204,13 +210,22 @@ public class Mechanisms {
     public void arm_off(){
         telescope.setPower(0);
     }
+    public double telescopePower = 0;
     public void set_telescope(double target){
         controller.setPID(TELESCOPE_P, TELESCOPE_I, TELESCOPE_D);
         double telescopePos = getPotentiometer();
 
         double pid = controller.calculate(telescopePos*ticks_to_inches, target);
         double power = pid;
+        if (target==0 && telescopePos < 100) {
+            power = -0.1;
+        }
+        telescopePower = power;
         telescope.setPower(power);
+    }
+
+    public double getTelescopePower() {
+        return telescopePower;
     }
 
     public void set_telescope_power(double power){
@@ -222,7 +237,8 @@ public class Mechanisms {
     }
 
     public double getPotentiometer() {
-        return (Range.scale(potentiometer.getVoltage(), startVoltage, endVoltage, 0, 4300));
+        double ticks = (Range.scale(potentiometer.getVoltage(), startVoltage, endVoltage, 0, 4300));
+        return ticks<0?0:ticks;
     }
     public double getVoltagePotentiometer() {
         return potentiometer.getVoltage();
