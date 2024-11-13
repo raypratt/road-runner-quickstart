@@ -25,13 +25,14 @@ import org.firstinspires.ftc.teamcode.mechanisms.Mechanisms;
 public class Auton extends LinearOpMode {
 
     Mechanisms mechs = new Mechanisms();
+    MecanumDrive drive;
     String color;
 
 
     @Override
     public void runOpMode() {
         Pose2d initialPose = new Pose2d(-34, -62.5, Math.toRadians(90));
-        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+        drive = new MecanumDrive(hardwareMap, initialPose);
         mechs.init(hardwareMap,0.39546, 2.239);
 
         // vision here that outputs position
@@ -98,6 +99,7 @@ public class Auton extends LinearOpMode {
                 new ParallelAction(
                     telescopeAction,
                     armAction,
+                    new LogPosition(),
                     new SequentialAction(
                             new WristScore(),
                             driveToBars.build(),
@@ -165,6 +167,16 @@ public class Auton extends LinearOpMode {
                     )
                 )
         );
+    }
+    public class LogPosition implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            Base.poseX = drive.pose.position.x;
+            Base.poseY = drive.pose.position.y;
+            Base.poseH = Math.toDegrees(drive.pose.heading.toDouble());
+            return true;
+        }
     }
     public class LockTelescope implements Action {
         // checks if the lift motor has been powered on
