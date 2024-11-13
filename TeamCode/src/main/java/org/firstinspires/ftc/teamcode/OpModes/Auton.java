@@ -52,7 +52,9 @@ public class Auton extends LinearOpMode {
         
         TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(-53,-51,Math.toRadians(45)))
                 .strafeTo(new Vector2d( 60,-60));
-
+        Base.poseX = drive.pose.position.x;
+        Base.poseY = drive.pose.position.y;
+        Base.poseH = Math.toDegrees(drive.pose.heading.toDouble());
 
         while (!isStopRequested() && !opModeIsActive()) {
             telemetry.addLine("Press Cross or A for Gold, Circle or B for Maroon");
