@@ -141,7 +141,7 @@ public class Mechanisms {
     }
 
     public double getBotHeading(){
-        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
     }
 
     public void intake_in(){
